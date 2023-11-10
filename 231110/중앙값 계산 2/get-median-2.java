@@ -24,9 +24,12 @@ public class Main {
 
             if (minHeap.size() - maxHeap.size() > 1)
                 maxHeap.add(minHeap.poll());
+            else if (maxHeap.size() - minHeap.size() > 1)
+                minHeap.add(maxHeap.poll());
 
             if (i % 2 == 0) {
-                System.out.print(minHeap.peek() + " ");
+                int midVal = (minHeap.size() > maxHeap.size()) ? minHeap.peek() : maxHeap.peek();
+                System.out.print(midVal + " ");
             }
         }
     }
