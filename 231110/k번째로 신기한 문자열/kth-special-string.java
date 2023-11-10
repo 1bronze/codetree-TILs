@@ -18,7 +18,11 @@ public class Main {
         Collections.sort(words);
 
         int startIdx = 0;
-        while (!words.get(startIdx).substring(0, T.length()).equals(T)) {
+        while (true) {
+            if ((T.length() <= words.get(startIdx).length()) 
+                    && words.get(startIdx).substring(0, T.length()).equals(T)) {
+                break;
+            }
             startIdx++;
         }
 
