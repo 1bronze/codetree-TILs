@@ -14,6 +14,15 @@ public class Main {
         int m2 = Integer.parseInt(st.nextToken());
         int d2 = Integer.parseInt(st.nextToken());
 
+        if (m1 > m2 || (m1 == m2 && d1 > d2)) {
+            m1 = m1 * m2;
+            m2 = m1 / m2;
+            m1 = m1 / m2;
+            d1 = d1 * d2;
+            d2 = d1 / d2;
+            d1 = d1 / d2;
+        }
+
         int gap = 0;
         int curMonth = m1;
         int curDay = d1;
