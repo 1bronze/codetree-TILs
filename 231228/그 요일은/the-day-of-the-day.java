@@ -37,6 +37,6 @@ public class Main {
         }
         dayCounts.set(pointer, dayCounts.get(pointer)+1);
 
-        System.out.println(DAYS.get(br.readLine()));
+        System.out.println(dayCounts.get(DAYS.get(br.readLine())));
     }
 }
