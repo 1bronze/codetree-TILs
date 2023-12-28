@@ -7,7 +7,6 @@ public class Main {
         int n = Integer.parseInt(br.readLine());
 
         int[] tiles = new int[200000];
-        int[] changeCnts = new int[200000];
 
         int position = 100000;
         for (int i = 0; i < n; i++) {
@@ -17,17 +16,13 @@ public class Main {
 
             for (int j = 0; j < x; j++) {
                 if (d == 'R') {
-                    if (tiles[position] != 1) {
-                        changeCnts[position]++;
-                        tiles[position] = 1;
-                    }
+                    tiles[position] = (tiles[position] < 0) ? -1 * tiles[position] + 1 : tiles[position] + 1;
                     position++;
+                    if (j == x - 1) position--;
                 } else {
-                    --position;
-                    if (tiles[position] != 2) {
-                        tiles[position] = 2;
-                        changeCnts[position]++;
-                    }
+                    tiles[position] = (tiles[position] > 0) ? -1 * tiles[position] - 1 : tiles[position] - 1;
+                    position--;
+                    if (j == x - 1) position++;
                 }
             }
         }
@@ -38,9 +33,9 @@ public class Main {
         for (int i = 0; i < 200000; i++) {
             if (tiles[i] == 0) continue;
 
-            if (tiles[i] == 1 && changeCnts[i] < 4) {
+            if (tiles[i] > 0 && tiles[i] < 4) {
                 black++;
-            } else if (tiles[i] == 2 && changeCnts[i] < 4) {
+            } else if (tiles[i] < 0 && tiles[i] > -4) {
                 white++;
             } else {
                 gray++;
