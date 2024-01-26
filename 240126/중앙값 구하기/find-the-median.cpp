@@ -7,7 +7,7 @@ int main() {
     int a;
     cin >> a;
     v.push_back(a);
-    sort(v, v+v.size());
+    sort(v.begin(), v.end());
     cout << v[1];
 
     return 0;
