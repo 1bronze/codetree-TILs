@@ -13,6 +13,7 @@ int main() {
             else cout << cur++ << " ";
         }
         cout << "\n";
+        if(cur>90) cur=65;
     }
 
     return 0;
