@@ -11,9 +11,9 @@ int main() {
         for(int j=0; j<n; j++) {
             if(i>j) cout << "  ";
             else cout << cur++ << " ";
+            if(cur>90) cur = 65;
         }
         cout << "\n";
-        if(cur>90) cur=65;
     }
 
     return 0;
