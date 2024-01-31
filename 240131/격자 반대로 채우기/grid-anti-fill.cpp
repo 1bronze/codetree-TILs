@@ -8,10 +8,10 @@ int main() {
 
     int cnt = 1;
     for (int j=n; j>=1; j--) {
-        if (j%2 == 0) { // 짝수 -> 아래부터
+        if (j%2 == n%2) {
             for (int i=n; i>=1; i--)
                 arr[i][j] = cnt++;
-        } else { // 홀수 -> 위부터
+        } else {
             for (int i=1; i<= n; i++)
                 arr[i][j] = cnt++;
         }
