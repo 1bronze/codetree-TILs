@@ -7,7 +7,7 @@ int main() {
     int  n, m;
     cin >> n >> m;
 
-    for (int i=1; i<=n; i++) {
+    for (int i=1; i<=m; i++) {
         int y, x; cin >> y >> x;
         arr[y][x] = y * x;
     }
