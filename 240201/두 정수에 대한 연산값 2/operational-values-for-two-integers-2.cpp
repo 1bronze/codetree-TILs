@@ -5,7 +5,7 @@ int main() {
     int a, b;
     cin >> a >> b;
 
-    if(a-b) {
+    if(a<b) {
         a += 10;
         b *= 2;
     } else {
