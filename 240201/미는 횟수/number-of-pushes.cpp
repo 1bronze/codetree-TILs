@@ -18,6 +18,6 @@ int main() {
         cnt++;
     }
 
-    cout << ((flag) ? cnt : '-1'); 
+    cout << ((flag) ? cnt : -1); 
     return 0;
 }
