@@ -25,10 +25,10 @@ int main() {
         if (s[i] == 'L') dir = (dir-1+4)%4;
         else if (s[i] == 'R') dir = (dir+1)%4;
         else {
-            if (dir==0 && y==0) continue;
+            if (dir==0 && y==1) continue;
             if (dir==1 && x==n) continue;
             if (dir==2 && y==n) continue;
-            if (dir==3 && x==0) continue;
+            if (dir==3 && x==1) continue;
 
             y = y + dy[dir];
             x = x + dx[dir];
