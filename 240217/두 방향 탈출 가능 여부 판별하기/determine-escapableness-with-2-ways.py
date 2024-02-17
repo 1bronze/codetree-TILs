@@ -23,7 +23,7 @@ while deq:
         if lst[nx][ny] != 1:
             continue
         
-        lst[x][y] = 2
+        lst[nx][ny] = 2
         deq.append((nx, ny))
 
 if lst[n-1][m-1] == 2:
