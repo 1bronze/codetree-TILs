@@ -9,9 +9,9 @@ lst = [list(map(int, input().split())) for i in range(n)]
 
 deq = deque()
 deq.append((0, 0))
+lst[0][0] = 2
 while deq:
     x, y = deq.popleft()
-    lst[x][y] = 2
 
     for i in range(2):
         nx = x + dx[i]
@@ -23,6 +23,7 @@ while deq:
         if lst[nx][ny] != 1:
             continue
         
+        lst[x][y] = 2
         deq.append((nx, ny))
 
 if lst[n-1][m-1] == 2:
