@@ -1,8 +1,7 @@
 // 변수 선언  및 입력
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
-const n = input[0].split(' ')[0];
-const k = input[0].split(' ')[1];
+const k = Number(input[0].split(' ')[1]);
 const nums = input[1].trim().split(' ');
 
 // nums를 정렬합니다.
