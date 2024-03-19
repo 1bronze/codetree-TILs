@@ -10,10 +10,10 @@ function getDistFromOrigin(x, y) {
     return Math.abs(x) + Math.abs(y);
 }
 
-for (let i = 1; i < n; i++) {
-    const [x, y] = input[i].split(' ').map(Number);
+for (let i = 0; i < n; i++) {
+    const [x, y] = input[i + 1].trim().split(' ').map(Number);
     // 원점과의 거리와 index를 저장합니다.
-    distances.push([getDistFromOrigin(x, y), i]);
+    distances.push([getDistFromOrigin(x, y), i + 1]);
 }
 
 distances.sort((a, b) => a[0] - b[0]);
