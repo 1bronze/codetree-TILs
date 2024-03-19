@@ -3,7 +3,7 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 const n = input[0].split(' ')[0];
 const k = input[0].split(' ')[1];
-const nums = input[1].split(' ');
+const nums = input[1].trim().split(' ');
 
 // nums를 정렬합니다.
 nums.sort();
