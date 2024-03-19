@@ -1,6 +1,6 @@
 // 변수 선언 및 입력
 const fs = require("fs");
-const s = fs.readFileSync(0).toString().split('');
+const s = fs.readFileSync(0).toString().trim().split('');
 
 // 각 문자를 원소로 담는 리스트 만들기
 const sortedList = s.sort();
