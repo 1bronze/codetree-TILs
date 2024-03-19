@@ -22,7 +22,7 @@ students.sort((a, b) => a.name.localeCompare(b.name));
 console.log("name");
 // 이름순으로 정렬한 결과 출력
 for (let student of students) {
-    console.log(`${student.name} ${student.height} ${student.weight}`);
+    console.log(`${student.name} ${student.height} ${student.weight.toFixed(1)}`);
 }
 
 console.log();
