@@ -14,7 +14,7 @@ const n = Number(input[0]);
 const students = [];
 for (let i = 1; i <= n; i++) {
   const [height, weight] = input[i].split(' ').map(Number);
-  students.push(new Student(height, weight, i + 1));
+  students.push(new Student(height, weight, i));
 }
 
 // Custom Comparator를 활용한 정렬
@@ -25,6 +25,6 @@ students.sort((a, b) => {
 });
 
 // 출력
-students.forEach(student => {
+for (let student of students) {
   console.log(`${student.height} ${student.weight} ${student.number}`);
-});
+}
