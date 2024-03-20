@@ -15,5 +15,5 @@ students.sort((a, b) => b[0] - a[0] || b[1] - a[1] || a[2] - b[2]);
 
 // 출력
 for (let student of students) {
-    console.log(`${student.height} ${student.weight} ${student.number}`);
+    console.log(`${student[0]} ${student[1]} ${student[2]}`);
 }
