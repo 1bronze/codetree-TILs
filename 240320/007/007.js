@@ -9,3 +9,8 @@ const s = [s_code, m_point, Number(given_time)];
 
 // tuple 원소들을 각 변수에 대입
 const [secret_code, meeting_point, time] = s;
+
+// 출력
+console.log(`secret code : ${secret_code}`);
+console.log(`meeting point : ${meeting_point}`);
+console.log(`time : ${time}`);
