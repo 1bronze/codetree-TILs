@@ -1,20 +1,17 @@
-// 상수 선언
+const fs = require("fs");
+const input = fs.readFileSync(0).toString().trim().split('\n');
+
 const MAX_T = 1000000;
 
-// 파일 시스템 모듈을 사용
-const fs = require("fs");
-const input = fs.readFileSync(0).trim().split("\n");
-
 // 변수 선언 및 입력
-const [n, m] = input[0].split(' ').map(Number);
-let posA = new Array(MAX_T + 1).fill(0);
-let posB = new Array(MAX_T + 1).fill(0);
+let index = 0;
+const [n, m] = input[index++].split(' ').map(Number);
+const posA = Array(MAX_T + 1).fill(0), posB = Array(MAX_T + 1).fill(0);
 
 // A가 매 초마다 서있는 위치를 기록
 let timeA = 1;
-let inputLine = 1;
 for (let i = 0; i < n; i++) {
-    const [v, t] = input[inputLine++].split(' ').map(Number);
+    const [v, t] = input[index++].split(' ').map(Number);
     for (let j = 0; j < t; j++) {
         posA[timeA] = posA[timeA - 1] + v;
         timeA += 1;
@@ -24,7 +21,7 @@ for (let i = 0; i < n; i++) {
 // B가 매 초마다 서있는 위치를 기록
 let timeB = 1;
 for (let i = 0; i < m; i++) {
-    const [v, t] = input[inputLine++].split(' ').map(Number);
+    const [v, t] = input[index++].split(' ').map(Number);
     for (let j = 0; j < t; j++) {
         posB[timeB] = posB[timeB - 1] + v;
         timeB += 1;
@@ -43,6 +40,7 @@ for (let i = 1; i < timeA; i++) {
         }
         // 리더를 A로 변경합니다.
         leader = 1;
+
     } else if (posA[i] < posB[i]) {
         // 조합이 바뀌었다면
         // 답을 갱신합니다.
@@ -51,6 +49,7 @@ for (let i = 1; i < timeA; i++) {
         }
         // 리더를 B로 변경합니다.
         leader = 2;
+
     } else {
         // 조합이 바뀌었다면
         // 답을 갱신합니다.
