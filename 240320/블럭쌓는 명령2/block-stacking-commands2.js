@@ -16,5 +16,5 @@ for (let j = 0; j < segments.length; j++) {
 }
 
 // 최댓값을 구합니다.
-const maxNum = Math.max(blocks);
+const maxNum = Math.max(...blocks);
 console.log(maxNum);
