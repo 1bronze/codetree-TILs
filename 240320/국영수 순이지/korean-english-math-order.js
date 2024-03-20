@@ -17,6 +17,6 @@ students.sort((a, b) => {
 });
 
 // 출력
-for (let student in students) {
+for (let student of students) {
     console.log(`${student[0]} ${student[1]} ${student[2]} ${student[3]}`);
 }
