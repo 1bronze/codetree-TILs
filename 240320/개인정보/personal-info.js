@@ -18,7 +18,7 @@ for (let i = 0; i < 5; i++) {
 }
 
 // Custom Comparator를 활용한 정렬 (이름순으로 정렬)
-students.sort((a, b) => a.name.localeCompare(b.name));
+students.sort((a, b) => a.name >= b.name ? 1 : -1);
 
 console.log("name");
 // 이름순으로 정렬한 결과 출력
