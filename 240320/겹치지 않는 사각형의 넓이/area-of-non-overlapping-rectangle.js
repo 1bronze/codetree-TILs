@@ -6,7 +6,7 @@ const MAX_R = 2000;
 
 // 변수 선언 및 입력
 const n = 3;
-const rects = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
+const rects = input.slice(0, n).map(line => line.split(' ').map(Number));
 
 const checked = Array.from({length: MAX_R + 1}, () => Array(MAX_R + 1).fill(0));
 
@@ -29,8 +29,8 @@ rects.forEach((rect, index) => {
 // 1, 2, 3 순으로 붙였는데도
 // 아직 숫자 1, 2로 남아있는 영역의 넓이를 구합니다.
 let area = 0;
-for (let x = 0; x <= MAX_R; x++) {
-    for (let y = 0; y <= MAX_R; y++) {
+for (let x = 1000; x <= 1010; x++) {
+    for (let y = 1000; y <= 1010; y++) {
         if (checked[x][y] === 1 || checked[x][y] === 2) {
             area += 1;
         }
