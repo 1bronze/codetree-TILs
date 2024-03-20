@@ -11,9 +11,9 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
-const n = Number(input.shift());
+const n = Number(input[0]);
 const students = [];
-for (let i = 0; i < n; i++) {
+for (let i = 1; i <= n; i++) {
   let [name, korean, english, math] = input[i].split(' ');
   students.push(new Student(name, Number(korean), Number(english), Number(math)));
 }
