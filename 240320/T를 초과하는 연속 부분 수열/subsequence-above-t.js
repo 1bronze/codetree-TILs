@@ -1,5 +1,5 @@
 const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split(' ');
+const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력:
 const [n, t] = input[0].split(' ').map(Number);
