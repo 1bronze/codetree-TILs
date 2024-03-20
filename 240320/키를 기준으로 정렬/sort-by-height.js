@@ -13,6 +13,6 @@ for (let i = 0; i < n; i++) {
 students.sort((a, b) => a[1] - b[1]);
 
 // 출력
-students.forEach(student => {
-  console.log(`${student[0]} ${student[1]} ${student[2]}`);
-});
+for (let student of students) {
+    console.log(`${student[0]} ${student[1]} ${student[2]}`);
+}
