@@ -2,8 +2,7 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
-const [nInit, b] = input[0].split(' ').map(Number);
-let n = nInit; // n을 변화시키면서 사용하기 위해 복사해 사용
+const [n, b] = input[0].split(' ').map(Number);
 const digits = [];
 
 // b진수로 변환합니다.
