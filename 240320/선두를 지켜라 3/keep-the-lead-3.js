@@ -3,7 +3,7 @@ const MAX_T = 1000000;
 
 // 파일 시스템 모듈을 사용
 const fs = require("fs");
-const input = fs.readFileSync(0, "utf8").trim().split("\n");
+const input = fs.readFileSync(0).trim().split("\n");
 
 // 변수 선언 및 입력
 const [n, m] = input[0].split(' ').map(Number);
