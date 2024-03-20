@@ -14,7 +14,7 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 const students = [];
 for (let i = 0; i < 5; i++) {
     const [name, height, weight] = input[i].split(' ');
-    students.push(new Student(name, Number(height), parseFloat(weight)));
+    students.push(new Student(name, Number(height), Number(weight).toFixed(1)));
 }
 
 // Custom Comparator를 활용한 정렬 (이름순으로 정렬)
