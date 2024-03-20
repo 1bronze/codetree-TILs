@@ -16,7 +16,7 @@ function inRange(x, y) {
 
 function adjacentCnt(x, y) {
     let cnt = 0;
-    for (let i = 0; i < dxs.length; i++) {
+    for (let i = 0; i < dx.length; i++) {
         const nx = x + dx[i];
         const ny = y + dy[i];
         if (inRange(nx, ny) && arr[nx][ny] === 1) {
