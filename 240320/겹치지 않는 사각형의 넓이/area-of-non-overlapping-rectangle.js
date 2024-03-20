@@ -29,8 +29,8 @@ rects.forEach((rect, index) => {
 // 1, 2, 3 순으로 붙였는데도
 // 아직 숫자 1, 2로 남아있는 영역의 넓이를 구합니다.
 let area = 0;
-for (let x = 1000; x <= 1010; x++) {
-    for (let y = 1000; y <= 1010; y++) {
+for (let x = 0; x <= MAX_R; x++) {
+    for (let y = 0; y <= MAX_R; y++) {
         if (checked[x][y] === 1 || checked[x][y] === 2) {
             area += 1;
         }
