@@ -18,8 +18,4 @@ while (true) {
 
 // 이진수를 출력 합니다.
 // 뒤집은 다음에 출력해야 함에 유의합니다.
-let binaryString = '';
-for (let digit of digits.reverse()) { // 역순 처리는 reverse() 메서드를 사용합니다.
-    binaryString += digit;
-}
-console.log(binaryString);
+console.log(digits.reverse().join(""));
