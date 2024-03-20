@@ -12,7 +12,7 @@ let timeA = 1;
 let currentIndex = 1;
 for (let i = 0; i < n; i++) {
     const [t, d] = input[currentIndex++].split(' ');
-    for (let j = 0; j < parseInt(t); j++) {
+    for (let j = 0; j < Number(t); j++) {
         posA[timeA] = posA[timeA - 1] + (d === 'R' ? 1 : -1);
         timeA++;
     }
@@ -22,7 +22,7 @@ for (let i = 0; i < n; i++) {
 let timeB = 1;
 for (let i = 0; i < m; i++) {
     const [t, d] = input[currentIndex++].split(' ');
-    for (let j = 0; j < parseInt(t); j++) {
+    for (let j = 0; j < Number(t); j++) {
         posB[timeB] = posB[timeB - 1] + (d === 'R' ? 1 : -1);
         timeB++;
     }
