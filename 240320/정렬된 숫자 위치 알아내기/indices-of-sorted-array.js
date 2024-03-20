@@ -1,4 +1,4 @@
-class Number {
+class Num {
     constructor(number, index) {
         this.number = number;
         this.index = index;
@@ -13,7 +13,7 @@ const n = Number(input[0]);
 const arr = input[1].split(' ').map(Number);
 let numbers = [];
 for (let i = 0; i < arr.length; i++) {
-    numbers.push(new Number(arr[i], i));
+    numbers.push(new Num(arr[i], i));
 }
 let answer = Array(n).fill(0);
 
