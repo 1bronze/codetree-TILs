@@ -51,6 +51,6 @@ while (!end()) {
 }
 
 // 출력:
-gird.forEach(row => {
+grid.forEach(row => {
     console.log(row.join(' '));
 });
