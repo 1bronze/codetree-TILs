@@ -39,8 +39,6 @@ for (let i = 2; i <= n * m; i++) {
 }
 
 // 출력:
-for (let i = 0; i < n; i++) {
-    answer[i].forEach(row => {
-        console.log(row.join(' '));
-    });
-}
+answer.forEach(row => {
+    console.log(row.join(" "));
+});
