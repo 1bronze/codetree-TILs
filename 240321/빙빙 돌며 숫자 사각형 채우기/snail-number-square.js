@@ -37,9 +37,5 @@ for (let i = 2; i <= n * m; i++) {
 
 // 출력:
 for (let i = 0; i < n; i++) {
-    // let row = '';
-    // for (let j = 0; j < m; j++) {
-    //     row += `${answer[i][j]} `;
-    // }
     console.log(answer[i].join(' '));
 }
