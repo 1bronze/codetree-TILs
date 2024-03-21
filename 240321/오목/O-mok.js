@@ -20,7 +20,7 @@ for (let i = 0; i < 19; i++) {
             continue;
         }
         
-        for (let dir = 0; dir < dxs.length; dir++) {
+        for (let dir = 0; dir < dx.length; dir++) {
             let curT = 1;
             let curX = i;
             let curY = j;
