@@ -21,15 +21,15 @@ for (let i = 1; i <= n; i++) {
 
         // k번의 모든 경기에 대해서 두 개발자의 위치를 찾고,
         // 하나라도 i번 개발자가 더 뒤에 있으면 correct를 false로 바꿉니다.
-        for (let list of arr) {
+        arr.forEach(list => {
             const indexI = list.indexOf(i);
             const indexJ = list.indexOf(j);
 
             if (indexI > indexJ) {
                 correct = false;
             }
-        }
-
+        })
+        
         if (correct) {
             ans += 1;
         }
