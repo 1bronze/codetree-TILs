@@ -17,19 +17,22 @@ for (let a1 = 0; a1 < 6; a1++) {
             for (let b2 = b1 + 1; b2 < 6; b2++) {
                 teamB = members[b1] + members[b2];
 
-                if (a1 === b1 && a2 === b2) {
+                if (a1 === b1 || a2 === b2 || a1 === b2 || a2 === b1) {
                     continue;
                 }
 
-                members.forEach(member => {
-                    teamC += member;
-                })
-                teamC -= teamA + teamB;
+                teamC = 0;
+                for (let i = 0; i < 6; i++) {
+                    teamC += members[i];
+                }
+                teamC -= (teamA + teamB);
+                // console.log(...members);
+                // console.log(a1, a2, b1, b2);
 
                 let maxTeam = Math.max(teamA, teamB, teamC);
                 let minTeam = Math.min(teamA, teamB, teamC);
                 minDiff = Math.min(minDiff, Math.abs(maxTeam - minTeam));
-                console.log(teamA, teamB, teamC, minDiff);
+                // console.log(teamA, teamB, teamC, minDiff);
             }
         }
     }
