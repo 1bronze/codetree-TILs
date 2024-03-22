@@ -44,10 +44,10 @@ for (let i = 1; i <= m; i++) {
         if (info.m !== i) {
             return;
         }
-
+        
         // person이 i번째 치즈를 처음 먹었거나
         // 이전보다 더 빨리 먹게 된 경우 time배열을 갱신합니다.
-        const {person, t} = info;
+        const {p: person, t} = info;
         if (time[person] === 0 || time[person] > t) {
             time[person] = t;
         }
@@ -59,7 +59,7 @@ for (let i = 1; i <= m; i++) {
     info2.forEach(info => {
         // person이 i번째 치즈를 먹지 않았거나
         // i번째 치즈를 먹은 시간보다 먼저 아픈 경우 모순이 생깁니다.
-        const {person, t} = info;
+        const {p: person, t} = info;
         if (time[person] === 0 || time[person] >= t) {
             possible = false;
         }
@@ -79,4 +79,5 @@ for (let i = 1; i <= m; i++) {
     ans = Math.max(ans, pill);
 }
 
+// 출력
 console.log(ans);
