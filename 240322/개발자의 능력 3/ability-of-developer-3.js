@@ -7,8 +7,13 @@ const arr = input[0].trim().split(' ').map(Number);
 
 const diff = (i, j, k) => {
     // 두 번째 팀원의 합은 전체에서 첫 번째 팀원의 합을 빼주면 됩니다.
-    const sum1 = arr[i] + arr[j] + arr[k];
-    const sum2 = arr.reduce((acc, val) => acc + val, 0) - sum1;
+    let sum1 = arr[i] + arr[j] + arr[k];
+    let sum2 = 0;
+    arr.forEach(val => {
+        sum2 += val;
+    });
+    sum2 -= sum1;
+    
     return Math.abs(sum1 - sum2);
 }
 
