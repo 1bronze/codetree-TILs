@@ -1,38 +1,37 @@
-const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split(' ');
+const fs = require('fs');
+const input = fs.readFileSync(0).toString().trim().split('\n');
 
-const members = input.map(Number);
+// 변수 선언 및 입력
+const n = 6;
+const arr = input[0].split(' ').map(Number);
 
-let teamA = 0;
-let teamB = 0;
-let teamC = 0;
+function diff(i, j, k, l) {
+    // 세 번째 팀원의 합은 전체에서 첫 번째 팀원과 두 번째 팀원의 합을 빼주면 됩니다.
+    const sum1 = arr[i] + arr[j];
+    const sum2 = arr[k] + arr[l];
+    const sum3 = arr.reduce((acc, curr) => acc + curr, 0) - sum1 - sum2;
 
+    // 세 팀의 차이 중 최댓값을 리턴합니다.
+    let ret = Math.abs(sum1 - sum2);
+    ret = Math.max(ret, Math.abs(sum2 - sum3));
+    ret = Math.max(ret, Math.abs(sum3 - sum1));
+
+    return ret;
+}
+
+// 첫 번째 팀원을 만들어줍니다.
 let minDiff = Number.MAX_SAFE_INTEGER;
+for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
 
-for (let a1 = 0; a1 < 6; a1++) {
-    for (let a2 = a1 + 1; a2 < 6; a2++) {
-        teamA = members[a1] + members[a2];
-
-        for (let b1 = 0; b1 < 6; b1++) {
-            for (let b2 = b1 + 1; b2 < 6; b2++) {
-                teamB = members[b1] + members[b2];
-
-                if (a1 === b1 || a2 === b2 || a1 === b2 || a2 === b1) {
+        // 두 번째 팀원을 만들어줍니다.
+        for (let k = 0; k < n; k++) {
+            for (let l = k + 1; l < n; l++) {
+                // 첫 번째 팀원과 두 번째 팀원이 겹치는지 여부를 확인합니다.
+                if (k === i || k === j || l === i || l === j) {
                     continue;
                 }
-
-                teamC = 0;
-                for (let i = 0; i < 6; i++) {
-                    teamC += members[i];
-                }
-                teamC -= (teamA + teamB);
-                // console.log(...members);
-                // console.log(a1, a2, b1, b2);
-
-                let maxTeam = Math.max(teamA, teamB, teamC);
-                let minTeam = Math.min(teamA, teamB, teamC);
-                minDiff = Math.min(minDiff, Math.abs(maxTeam - minTeam));
-                // console.log(teamA, teamB, teamC, minDiff);
+                minDiff = Math.min(minDiff, diff(i, j, k, l));
             }
         }
     }
