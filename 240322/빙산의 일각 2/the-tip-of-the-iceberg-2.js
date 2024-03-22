@@ -4,8 +4,8 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 const MAX_H = 1000;
 
 // 변수 선언 및 입력
-const n = Number(input.shift()); // 첫 번째 원소를 꺼내고 나머지 원소들을 배열로 만듭니다.
-const h = input.map(Number); // 나머지 입력을 숫자로 변환합니다.
+const n = Number(input[0]); // 첫 번째 원소를 꺼내고 나머지 원소들을 배열로 만듭니다.
+const h = input.slice(1, 1 + n).map(Number); // 나머지 입력을 숫자로 변환합니다.
 
 let ans = 0;
 
