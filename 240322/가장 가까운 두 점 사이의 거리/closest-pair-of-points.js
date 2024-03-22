@@ -2,8 +2,8 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
-const n = Number(input.shift());
-const points = input.slice(0, n).map(line => line.split(' ').map(Number));
+const n = Number(input[0]);
+const points = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 
 // 두 점 사이의 거리의 제곱 값을 반환하는 함수
 function dist(i, j) {
