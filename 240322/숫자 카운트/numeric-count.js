@@ -2,8 +2,8 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
-const n = Number(input.shift());
-const arr = input.map(line => line.split(' ').map(Number));
+const n = Number(input[0]);
+const arr = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 
 // 모든 숫자를 다 만들어 봅니다. (백의 자리수가 i, 십의 자리수가 j, 일의 자리수가 k)
 let cnt = 0;
