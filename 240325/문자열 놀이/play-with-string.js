@@ -3,7 +3,7 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split("\n");
 
 let string = input[0].split(" ")[0];
-let q = Number(input[0].split(" ")[0]);
+let q = Number(input[0].split(" ")[1]);
 
 // Calculate the length of the string.
 let leng = string.length;
