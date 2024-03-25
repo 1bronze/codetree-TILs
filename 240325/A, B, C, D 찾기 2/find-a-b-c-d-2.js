@@ -14,8 +14,8 @@ for (let a = 1; a <= MAX_A; a++) {
                     a + c, b + d, a + b + c, a + b + d, a + c + d, b + c + d,
                     a + b + c + d];
                 
-                    sortedArr1 = arr.sort((x, y) => x - y).join(',')
-                    sortedArr2 = arr2.sort((x, y) => x - y).join(',')
+                    let sortedArr1 = arr.sort((x, y) => x - y).join(',')
+                    let sortedArr2 = arr2.sort((x, y) => x - y).join(',')
 
                 if (sortedArr1 === sortedArr2) {
                     // 만약 두 배열이 완전히 같다면 a, b, c, d조합을 찾아냈습니다.
