@@ -1,6 +1,6 @@
 // 변수 선언 및 입력
 const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim("\n");
+const input = fs.readFileSync(0).toString().trim().split("\n");
 
 // 문자열을 구현하여 입력받습니다.
 let a = input[0];
