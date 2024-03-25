@@ -1,37 +1,47 @@
 const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split('\n');
+const input = fs.readFileSync(0, "utf-8").trim().split('\n');
 
 const n = Number(input[0]);
-const arr = [...input[1]];
+const string = input[1];
 
 let ans = 1;
 
-// 기준문자열 => (i, j)
-for (let i = 0; i < arr.length; i++) {
-    for (let j = i; j < arr.length; j++) {
+// 1씩 늘려가면서 어느 길이까지 2번 등장하지는지 모두 시도해봅니다.
+for (let i = 1; i < n; i++) {
+    // 모든 길이가 i인 부분 문자열에 대해 쌍을 짓고
+    // 둘이 완전히 똑같은지 확인합니다.
+    
+    // twice : i 길이의 2회 이상 등장하는 부분 문자열이 존재하면 true
+    let twice = false;
 
-    }
-}
+    for (let j = 0; j < n - i + 1; j++) {
+        for (let k = j + 1; k < n - i + 1; k++) {
+            // isSame : j부터 i길이의 부분 문자열과
+            // k부터 i길이의 부분 문자열이 완전히 같으면 true
+            let isSame = true;
 
-
-// 길이가 i인 문자열 검색
-for (let i = 1; i < arr.length; i++) {
-
-    for (let j = 0; j + i - 1 < arr.length; j++) {
-        // 기준문자열 str1
-        let str1 = arr.slice(j, j + i).join("");
-
-        for (let k = 0; k + i - 1 < arr.length; k++) {
-            // 비교문자열 str2
-            if (j == k) {
-                continue;
+            for (let l = 0; l < i; l++) {
+                if (string[j + l] !== string[k + l]) {
+                    isSame = false;
+                    break;
+                }
             }
-            let str2 = arr.slice(k, k+i).join("");
 
-            if (str1 === str2) {
-                ans = i + 1;
+            if (isSame) {
+                twice = true;
+                break;
             }
         }
+
+        if (twice) {
+            break;
+        }
+    }
+
+    if (twice) {
+        ans = i + 1;
+    } else {
+        break;
     }
 }
 
