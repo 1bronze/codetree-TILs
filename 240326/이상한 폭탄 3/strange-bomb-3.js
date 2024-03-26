@@ -4,12 +4,11 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 const MAX_A = 1000000;
 
 // 변수 선언 및 입력
-let index = 0;
-const [n, k] = input[index++].split(' ').map(Number);
+const [n, k] = input[0].split(' ').map(Number);
 
 const num = [];
-for (let i = 0; i < n; i++) {
-    num.push(Number(input[index++]));
+for (let i = 1; i <= n; i++) {
+    num.push(Number(input[i]));
 }
 
 const bomb = new Array(MAX_A + 1).fill(0);
