@@ -5,13 +5,12 @@ const INT_MAX = Number.MAX_SAFE_INTEGER;
 const MAX_H = 100;
 
 // 변수 선언 및 입력
-let index = 0;
-const n = Number(input[index++]);
+const n = Number(input[0]);
 const k = 17;
 const arr = [];
 
-for (let i = 0; i < n; i++) {
-    arr.push(Number(input[index++]));
+for (let i = 1; i <= n; i++) {
+    arr.push(Number(input[i]));
 }
 
 let ans = INT_MAX;
