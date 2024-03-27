@@ -8,12 +8,12 @@ const n = Number(input[0]);
 const changes = input.slice(1).map((v) => v.split(" "));
 
 // 현재 A, B의 점수를 나타냅니다.
-let score_a = 0;
-let score_b = 0;
+let scoreA = 0;
+let scoreB = 0;
 
 // 명예의 전당 상태를 반환합니다.
 // 총 3가지 상황이 있습니다.
-function get_status(score1, score2) {
+function getStatus(score1, score2) {
     // 1. A만 명예의 전당에 올라가 있는 경우
     if (score1 > score2) {
         return 1;
@@ -37,23 +37,23 @@ changes.forEach(([name, value]) => {
     if (name === "A") {
         // 현재 점수와, 이후 점수의 상태를 비교했을 때 조합에 변동이 있다면
         // 답을 갱신합니다.
-        if (get_status(score_a, score_b) !== get_status(score_a + value, score_b)) {
+        if (getStatus(scoreA, scoreB) !== getStatus(scoreA + value, scoreB)) {
             ans += 1;
         }
 
         // 값을 갱신해줍니다.
-        score_a += value;
+        scoreA += value;
     }
     // 변동이 있는 학생이 B라면
     else {
         // 현재 점수와, 이후 점수의 상태를 비교했을 때 조합에 변동이 있다면
         // 답을 갱신합니다.
-        if (get_status(score_a, score_b) !== get_status(score_a, score_b + value)) {
+        if (getStatus(scoreA, scoreB) !== getStatus(scoreA, scoreB + value)) {
             ans += 1;
         }
 
         // 값을 갱신해줍니다.
-        score_b += value;
+        scoreB += value;
     }
 });
 
