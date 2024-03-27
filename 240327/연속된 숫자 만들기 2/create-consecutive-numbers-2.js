@@ -15,7 +15,7 @@ const mid = a + b + c - left - right;
 
 let ans = 3;
 
-if (mid-left === 1 && right-left === 1) { // Case 1. 이미 일렬로 선 경우
+if (mid-left === 1 && right-mid === 1) { // Case 1. 이미 일렬로 선 경우
     ans = 0;
 } else if (mid-left === 2 || right-mid === 2) { // Case 2. 두 명만 인접해 있는 경우
     ans = 1;
