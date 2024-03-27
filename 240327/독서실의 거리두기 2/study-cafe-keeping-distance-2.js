@@ -8,7 +8,7 @@ const seats = input[1].split("");
 // Step1-1. 최적의 위치 찾기
 // 인접한 쌍들 중 가장 먼 1간의 쌍을 찾습니다.
 let maxDist = 0;
-let [max_i, max_j] = [-1, -1];
+let [maxI, maxJ] = [-1, -1];
 for (let i = 0; i < n; i++) {
     if (seats[i] === "1") {
         for (let j = i + 1; j < n; j++) {
@@ -20,7 +20,7 @@ for (let i = 0; i < n; i++) {
                     maxDist = j - i;
 
                     // 이때, 두 좌석의 위치를 기억합니다.
-                    [max_i, max_j] = [i, j];
+                    [maxI, maxJ] = [i, j];
                 }
 
                 // 인접한 쌍을 찾았으므로 빠져나옵니다.
@@ -74,7 +74,7 @@ if (seats[n - 1] === "0") {
 if (maxDist2 >= maxDist / 2) {
     seats[maxIdx] = "1";
 } else {
-    seats[Math.floor((max_i + max_j) / 2)] = "1";
+    seats[Math.floor((maxI + maxJ) / 2)] = "1";
 }
 
 // Step3. 이제 인접한 쌍들 중 가장 가까운 1간의 쌍을 찾습니다.
