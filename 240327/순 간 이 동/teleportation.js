@@ -1,23 +1,18 @@
-fs = require("fs")
-input = fs.readFileSync(0).toString().trim();
+const fs = require("fs");
+const input = fs.readFileSync(0).toString().trim().split('\n');
 
-const [a, b, x, y] = input.split(" ").map(Number);
+// 변수 선언 및 입력
+const [a, b, x, y] = input[0].split(' ').map(Number);
 
-let ans = 0;
+let minDist = Number.MAX_SAFE_INTEGER; // JS에서 안전한 가장 큰 정수를 나타냅니다.
 
-// Case 1. a > b
-ans = Math.abs(a-b);
+// Case 1. a -> b 바로 이동
+minDist = Math.min(minDist, Math.abs(b - a));
 
-// Case 2. a > x > b
-ans = Math.min(ans, Math.abs(a-x) + Math.abs(x-b));
+// Case 2. a -> x -> y -> b 순서로 이동
+minDist = Math.min(minDist, Math.abs(x - a) + Math.abs(b - y));
 
-// Case 3. a > y > b
-ans = Math.min(ans, Math.abs(a-y) + Math.abs(y-b));
+// Case 3. a -> y -> x -> b 순서로 이동
+minDist = Math.min(minDist, Math.abs(y - a) + Math.abs(b - x));
 
-// Case 4. a > x > y > b
-ans = Math.min(ans, Math.abs(a-x) + Math.abs(y-b));
-
-// Case 5. a > y > x > b
-ans = Math.min(ans, Math.abs(a-y) + Math.abs(x-b));
-
-console.log(ans);
+console.log(minDist);
