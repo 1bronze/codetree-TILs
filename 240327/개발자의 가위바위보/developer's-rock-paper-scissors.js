@@ -1,27 +1,40 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split("\n");
 
+// 변수 선언 및 입력
 const n = Number(input[0]);
-const pair = input.slice(1, 1 + n).map(line => line.split(" ").map(Number));
+const arr = input.slice(1).map((v) => v.split(" ").map(Number));
 
-let ans = 0;
-for (let rock = 1; rock <= 3; rock++) {
-    for (let scissor = 1; scissor <= 3; scissor++) {
-        if (scissor === rock) continue;
+let maxWin = 0;
 
-        for (let paper = 1; paper <= 3; paper++) {
-            if (paper === rock || paper === scissor) continue;
-
-            let count = 0;
-            pair.forEach(([p1, p2]) => {
-                if ((p1 === rock && p2 === scissor) || (p1 === scissor && p2 === paper) || (p1 === paper && p2 === rock)) {
-                    count++;
-                }
-            });
-
-            ans = Math.max(ans, count);
-        }
+// Case 1. 1이 2를 이기고, 2가 3을 이기고 3이 1을 이기는 경우
+let win = 0;
+for (let i = 0; i < n; i++) {
+    const [a, b] = arr[i];
+    if (a === 1 && b === 2) {
+        win += 1;
+    } else if (a === 2 && b === 3) {
+        win += 1;
+    } else if (a === 3 && b === 1) {
+        win += 1;
     }
 }
 
-console.log(ans);
+maxWin = Math.max(maxWin, win);
+
+// Case 2. 1이 3을 이기고, 3이 2를 이기고 2가 1을 이기는 경우
+win = 0;
+for (let i = 0; i < n; i++) {
+    const [a, b] = arr[i];
+    if (a === 1 && b === 3) {
+        win += 1;
+    } else if (a === 3 && b === 2) {
+        win += 1;
+    } else if (a === 2 && b === 1) {
+        win += 1;
+    }
+}
+
+maxWin = Math.max(maxWin, win);
+
+console.log(maxWin);
