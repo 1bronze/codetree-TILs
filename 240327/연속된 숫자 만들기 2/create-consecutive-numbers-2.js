@@ -17,7 +17,7 @@ let ans = 3;
 
 if (mid-left === 1 && right-left === 1) { // Case 1. 이미 일렬로 선 경우
     ans = 0;
-} else if (mid-left === 1 || right-left === 1) { // Case 2. 두 명만 인접해 있는 경우
+} else if (mid-left === 2 || right-left === 2) { // Case 2. 두 명만 인접해 있는 경우
     ans = 1;
 } else { // Case 3. 모두 떨어져 있는 경우
     ans = 2;
