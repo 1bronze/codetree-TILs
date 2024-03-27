@@ -20,32 +20,15 @@ for (let i = 0; i < n; i++) {
     }
 }
 
-// Step2. gap이 가장 큰 구간 사이에 1 놓기
-const mid = Math.floor((max_l + max_r) / 2);
-arr[mid] = 1;
-
 let ans = 0;
 
-// Step3. minDist 찾기
-let minDist = n;
-last = -1;
-for (let i = 0; i < n; i++) {
-    if (arr[i] === 1) {
-        if (last === -1) {
-            last = i;
-        } else if (minDist > i - last) {
-            minDist = i - last;
-        }
-        last = i;
-    }
-}
-ans = Math.max(ans, minDist);
-arr[mid] = 0;
+if (max_l !== -1 || max_r !== -1) {
+    // Step2. gap이 가장 큰 구간 사이에 1 놓기
+    const mid = Math.floor((max_l + max_r) / 2);
+    arr[mid] = 1;
 
-// Step4. 제일 앞에 1이 오는 경우를 고려해서 minDist 업데이트 하기
-if (arr[0] !== 1) {
-    arr[0] = 1;
-    minDist = n;
+    // Step3. minDist 찾기
+    let minDist = n;
     last = -1;
     for (let i = 0; i < n; i++) {
         if (arr[i] === 1) {
@@ -58,13 +41,34 @@ if (arr[0] !== 1) {
         }
     }
     ans = Math.max(ans, minDist);
+    // console.log(arr.join(""), minDist);
+    arr[mid] = 0;
+}
+
+// Step4. 제일 앞에 1이 오는 경우를 고려해서 minDist 업데이트 하기
+if (arr[0] !== 1) {
+    arr[0] = 1;
+    let minDist = n;
+    last = -1;
+    for (let i = 0; i < n; i++) {
+        if (arr[i] === 1) {
+            if (last === -1) {
+                last = i;
+            } else if (minDist > i - last) {
+                minDist = i - last;
+            }
+            last = i;
+        }
+    }
+    ans = Math.max(ans, minDist);
+    // console.log(arr.join(""), minDist);
     arr[0] = 0;
 }
 
 // Step5. 제일 뒤에 1이 오는 경우를 고려해서 minDist 업데이트 하기
 if (arr[n - 1] !== 1) {
     arr[n - 1] = 1;
-    minDist = n;
+    let minDist = n;
     last = -1;
     for (let i = 0; i < n; i++) {
         if (arr[i] === 1) {
@@ -77,6 +81,7 @@ if (arr[n - 1] !== 1) {
         }
     }
     ans = Math.max(ans, minDist);
+    // console.log(arr.join(""), minDist);
     arr[n - 1] = 0;
 }
 
