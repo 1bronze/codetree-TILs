@@ -11,16 +11,33 @@ for (let i = 0; i < n; i++) {
 let dist = 0;
 let last = 1;
 
+let l = 1;
+let r = 1;
+
 for (let i = 2; i <= n; i++) {
     if (arr[i] === 1) {
-        dist = Math.max(dist, i - last);
+
+        if (dist < i - last) {
+            dist = i - last;
+            l = last;
+            r = i;
+        }
         last = i;
     }
-    // console.log(i, dist);
 }
 
-if (dist % 2 === 1) {
-    dist -= 2;
+let tmp = r - l;
+arr[l + tmp/2] = 1;
+
+dist = n;
+last = 1;
+for (let i = 2; i <= n; i++) {
+    if (arr[i] === 1) {
+        dist = Math.min(dist, i - last);
+        last = i;
+    }
 }
 
-console.log(Math.floor(dist / 2));
+// console.log(arr.join());
+
+console.log(dist);
