@@ -20,7 +20,7 @@ for (let i = 2; i <= n; i++) {
 }
 
 if (dist % 2 === 1) {
-    dist -= 1;
+    dist -= 2;
 }
 
 console.log(Math.floor(dist / 2));
