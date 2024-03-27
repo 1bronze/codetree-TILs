@@ -1,88 +1,96 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split("\n");
 
+// 변수 선언 및 입력
 const n = Number(input[0]);
-const arr = input[1].split("").map(Number);
+const seats = input[1].split("");
 
-// Step1. gap이 가장 큰 구간 찾기
+// Step1-1. 최적의 위치 찾기
+// 인접한 쌍들 중 가장 먼 1간의 쌍을 찾습니다.
 let maxDist = 0;
-let max_l = -1;
-let max_r = -1;
-let last = -1;
+let [max_i, max_j] = [-1, -1];
 for (let i = 0; i < n; i++) {
-    if (arr[i] === 1) {
-        if (last != -1 && maxDist < i - last) {
-            maxDist = i - last;
-            max_l = last;
-            max_r = i;
+    if (seats[i] === "1") {
+        for (let j = i + 1; j < n; j++) {
+            if (seats[j] === "1") {
+                // 1간의 쌍을 골랐을 때
+                // 두 좌석간의 거리가 지금까지의 최적의 답 보다 더 좋다면
+                // 값을 갱신해줍니다.
+                if (j - i > maxDist) {
+                    maxDist = j - i;
+
+                    // 이때, 두 좌석의 위치를 기억합니다.
+                    [max_i, max_j] = [i, j];
+                }
+
+                // 인접한 쌍을 찾았으므로 빠져나옵니다.
+                break;
+            }
         }
-        last = i;
     }
 }
 
-let ans = 0;
-
-if (max_l !== -1 || max_r !== -1) {
-    // Step2. gap이 가장 큰 구간 사이에 1 놓기
-    const mid = Math.floor((max_l + max_r) / 2);
-    arr[mid] = 1;
-
-    // Step3. minDist 찾기
-    let minDist = n;
-    last = -1;
+// Step1-2. 최적의 위치 찾기(예외 처리)
+// 만약 맨 앞 좌석이 비거나, 맨 뒷 좌석이 비어있는 경우의
+// 예외 처리를 해줍니다.
+let maxDist2 = -1;
+let maxIdx = -1;
+// 맨 앞 좌석이 비어있을 때, 맨 앞 좌석에 배정하면
+// 거리가 얼마나 줄어드는지 확인합니다.
+if (seats[0] === "0") {
+    let dist = 0;
     for (let i = 0; i < n; i++) {
-        if (arr[i] === 1) {
-            if (last === -1) {
-                last = i;
-            } else if (minDist > i - last) {
-                minDist = i - last;
-            }
-            last = i;
+        if (seats[i] === "1") {
+            break;
         }
+        dist += 1;
     }
-    ans = Math.max(ans, minDist);
-    // console.log(arr.join(""), minDist);
-    arr[mid] = 0;
+
+    if (dist > maxDist2) {
+        maxDist2 = dist;
+        maxIdx = 0;
+    }
 }
 
-// Step4. 제일 앞에 1이 오는 경우를 고려해서 minDist 업데이트 하기
-if (arr[0] !== 1) {
-    arr[0] = 1;
-    let minDist = n;
-    last = -1;
-    for (let i = 0; i < n; i++) {
-        if (arr[i] === 1) {
-            if (last === -1) {
-                last = i;
-            } else if (minDist > i - last) {
-                minDist = i - last;
-            }
-            last = i;
+// 맨 뒷 좌석이 비어있을 때, 맨 뒷 좌석에 배정하면
+// 거리가 얼마나 줄어드는지 확인합니다.
+if (seats[n - 1] === "0") {
+    let dist = 0;
+    for (let i = n - 1; i >= 0; i--) {
+        if (seats[i] === "1") {
+            break;
         }
+        dist += 1;
     }
-    ans = Math.max(ans, minDist);
-    // console.log(arr.join(""), minDist);
-    arr[0] = 0;
+
+    if (dist > maxDist2) {
+        maxDist2 = dist;
+        maxIdx = n - 1;
+    }
 }
 
-// Step5. 제일 뒤에 1이 오는 경우를 고려해서 minDist 업데이트 하기
-if (arr[n - 1] !== 1) {
-    arr[n - 1] = 1;
-    let minDist = n;
-    last = -1;
-    for (let i = 0; i < n; i++) {
-        if (arr[i] === 1) {
-            if (last === -1) {
-                last = i;
-            } else if (minDist > i - last) {
-                minDist = i - last;
+// Step2. 최적의 위치에 1을 놓습니다.
+// 앞서 찾은 자리들 중 최적의 위치에 놓으면 됩니다.
+if (maxDist2 >= maxDist / 2) {
+    seats[maxIdx] = "1";
+} else {
+    seats[Math.floor((max_i + max_j) / 2)] = "1";
+}
+
+// Step3. 이제 인접한 쌍들 중 가장 가까운 1간의 쌍을 찾습니다.
+// 이때의 값이 답이 됩니다.
+let ans = Number.MAX_SAFE_INTEGER;
+for (let i = 0; i < n; i++) {
+    if (seats[i] === "1") {
+        for (let j = i + 1; j < n; j++) {
+            if (seats[j] === "1") {
+                ans = Math.min(ans, j - i);
+
+                // 인접한 쌍을 찾았으므로 빠져나옵니다.
+                break;
             }
-            last = i;
         }
     }
-    ans = Math.max(ans, minDist);
-    // console.log(arr.join(""), minDist);
-    arr[n - 1] = 0;
 }
 
 console.log(ans);
