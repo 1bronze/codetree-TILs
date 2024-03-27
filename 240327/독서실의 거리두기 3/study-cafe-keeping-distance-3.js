@@ -27,7 +27,7 @@ for (let i = 2; i <= n; i++) {
 }
 
 let tmp = r - l;
-arr[l + tmp/2] = 1;
+arr[l + Math.floor(tmp/2)] = 1;
 
 dist = n;
 last = 1;
@@ -37,7 +37,5 @@ for (let i = 2; i <= n; i++) {
         last = i;
     }
 }
-
-// console.log(arr.join());
 
 console.log(dist);
