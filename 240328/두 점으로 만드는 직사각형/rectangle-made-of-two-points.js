@@ -1,25 +1,15 @@
 const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split("\n");
+const input = fs.readFileSync(0).toString().trim().split('\n');
 
-// const rec1First = input[0].split(" ").slice(0, 2).map(Number);
-// const rec1Second = input[0].split(" ").slice(2, 4).map(Number);
-// const rec2First = input[1].split(" ").slice(0, 2).map(Number);
-// const rec2Second = input[1].split(" ").slice(2, 4).map(Number);
+// 변수 선언 및 입력:
+const [x1, y1, x2, y2] = input[0].split(' ').map(Number);
+const [a1, b1, a2, b2] = input[1].split(' ').map(Number);
 
-// const leftPoint = [Math.min(rec1First[0], rec2First[0]), Math.min(rec1First[1], rec2First[1])];
-// const rightPoint = [Math.min(rec1Second[0], rec2Second[0]), Math.min(rec1Second[1], rec2Second[1])];
+// 주어진 값들 중 가장 큰 x에서 가장 작은 x를 뺀 길이가 
+// 세로 길이가 되어야 합니다.
+// 마찬가지 이유로 가장 큰 y에서 가장 작은 y를 뺀 길이가
+// 가로 길이가 되어야 합니다.
+const width = Math.max(x2, a2) - Math.min(x1, a1);
+const height = Math.max(y2, b2) - Math.min(y1, b1);
 
-// const area = Math.abs(rightPoint[0] - leftPoint[0]) * Math.abs(rightPoint[1] - leftPoint[1]);
-
-const rec1Info = input[0].split(" ").map(Number);
-const rec2Info = input[1].split(" ").map(Number);
-
-const minX = Math.min(rec1Info[0], rec1Info[2], rec2Info[0], rec2Info[2]);
-const maxX = Math.max(rec1Info[0], rec1Info[2], rec2Info[0], rec2Info[2]);
-
-const minY = Math.min(rec1Info[1], rec1Info[3], rec2Info[1], rec2Info[3]);
-const maxY = Math.max(rec1Info[1], rec1Info[3], rec2Info[1], rec2Info[3]);
-
-const area = Math.abs(maxX - minX) * Math.abs(maxY - minY);
-
-console.log(area);
+console.log(width * height);
