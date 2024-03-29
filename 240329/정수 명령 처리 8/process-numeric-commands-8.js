@@ -1,20 +1,3 @@
-// Convert this python code to javascript
-// you must use CamelCase for class name and method name
-// also you must use const and let instead of var
-// you should use console.log() to print the result
-// you should contain origin comment in converted code
-//
-// l = DoublyLinkedList()   # 정수를 관리할 list를 선언합니다. => 빈 연결리스트
-// l.push_front(3)          # 맨 앞에 3을 추가합니다.
-// l.push_front(5)          # 맨 앞에 5를 추가합니다.
-// print(l.front())         # 맨 앞에 적혀있는 숫자인 5가 출력됩니다.
-// print(l.back())          # 맨 뒤에 적혀있는 숫자인 3이 출력됩니다.
-// l.push_back(9)           # 맨 뒤에 9를 추가합니다.
-// print(l.back())          # 맨 뒤에 적혀있는 숫자인 9가 출력됩니다.
-// l.pop_front()            # 맨 앞 숫자(5)를 제거합니다.
-// print(l.front())         # 맨 앞에 적혀있는 숫자인 3이 출력됩니다.
-// print(l.size())          # 원소의 개수를 출력합니다 => 2
-
 class Node {
     constructor(data) {
         this.data = data;
@@ -133,7 +116,7 @@ class DoublyLinkedList {
 }
 
 const fs = require("fs");
-const input = fs.readFileSync("0").toString().trim().split("\n");
+const input = fs.readFileSync(0).toString().trim().split("\n");
 
 // 변수 선언 및 입력:
 const n = Number(input[0]);
