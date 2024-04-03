@@ -12,14 +12,14 @@ class Deque {
     }
 
     popFront() {  // 덱의 맨 앞에 있는 데이터를 반환하고 제거합니다.
-        if (this.empty()) {
+        if (this.size() === 0) {
             throw new Error("Deque is empty");
         }
         return this.dq.shift();
     }
 
     front() {  // 덱의 맨 앞에 있는 데이터를 제거하지 않고 반환합니다.
-        if (this.empty()) {
+        if (this.size() === 0) {
             throw new Error("Deque is empty");
         }
         return this.dq[0];
