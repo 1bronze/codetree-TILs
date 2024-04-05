@@ -1,26 +1,20 @@
 class Queue {
     constructor() {  // 빈 큐 하나를 생성합니다.
         this.q = [];
-        this.head = -1;
+        this.head = 0;
         this.tail = -1;
     }
 
     push(item) {  // 큐의 맨 뒤에 데이터를 추가합니다.
         this.q.push(item);
         this.tail++;
-        if (this.head === -1) {
-            this.head++;
-        }
     }
 
     empty() {  // 큐가 비어있으면 true를 반환합니다.
-        return (this.head === -1 || this.head > this.tail);
+        return (this.head > this.tail);
     }
 
     size() {  // 큐에 들어있는 데이터 수를 반환합니다.
-        if (this.head === -1) {
-            return 0;
-        }
         return (this.tail - this.head + 1);
     }
 
