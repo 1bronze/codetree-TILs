@@ -68,23 +68,23 @@ const [n, k] = input[0].split(" ").map(Number)
 const q = new Queue();
 
 // 큐로 현재 남은 사람들을 관리합니다.
-for (let i = 0; i < n; i++) {
-    q.push(i + 1);
+for (let i = 1; i <= n; i++) {
+    q.push(i);
 }
 
-let ans = "";
-while (q.size() !== 1) {
+let answer = "";
+while (q.size() > 1) {
     // k번째 사람을 찾습니다.
     // 이 과정에서 이미 탐색한 사람은 맨 뒤로 옮겨줍니다.
     for (let i = 0; i < k - 1; i++) {
-        q.push(q.pop());
+        q.push(q.front());
+        q.pop();
     }
-
     // k번째 사람을 제거합니다.
-    ans += q.pop() + " ";
+    answer += `${q.front()} `;
+    q.pop();
 }
 
 // 마지막 사람을 제거합니다.
-ans += q.pop();
-
-console.log(ans);
+answer += `${q.front()} `;
+console.log(answer);
