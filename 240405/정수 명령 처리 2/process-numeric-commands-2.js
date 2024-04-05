@@ -1,35 +1,42 @@
+const MAX_SIZE = 10000;
+
 class Queue {
-    constructor() {
-        this.q = [];
-        this.head = -1; // head는 큐의 가장 첫 원소의 위치 바로 앞을 가리킵니다.
-        this.tail = -1; // tail은 큐의 가장 마지막 원소의 위치를 가리킵니다.
+    constructor() {  // 빈 큐 하나를 생성합니다.
+        this.q = Array(MAX_SIZE).fill(0);
+        this.head = 0;
+        this.tail = 0;
     }
 
-    push(item) {
-        this.q.push(item);
-        this.tail++;
+    push(item) {  // 큐의 맨 뒤에 데이터를 추가합니다.
+        if (this.full()) throw new Error("Queue is full");
+
+        this.tail = (this.tail + 1) % MAX_SIZE;
+        this.q[this.tail] = item;
     }
 
-    empty() {
-        return (this.head === this.tail); // head와 tail이 같은지만으로 큐가 비었는지 여부를 쉽게 파악할 수 있습니다.
+    full() {  // 큐가 가득 차 있으면 true를 반환합니다.
+        return this.tail % this.maxSize === this.head;
     }
 
-    size() {
-        return (this.tail - this.head); // head와 tail의 차가 곧 큐의 크기가 됩니다.
+    empty() {  // 큐가 비어있으면 true를 반환합니다.
+        return this.head === this.tail;
     }
 
-    pop() {
-        if (this.empty()) {
-            throw new Error("Queue is empty");
-        }
-        return this.q[++this.head];
+    size() {  // 큐에 들어있는 데이터 수를 반환합니다.
+        return (this.tail - this.head + MAX_SIZE) % MAX_SIZE;
     }
 
-    front() {
-        if (this.empty()) {
-            throw new Error("Queue is empty");
-        }
-        return this.q[this.head + 1];
+    pop() {  // 큐의 맨 앞에 있는 데이터를 반환하고 제거합니다.
+        if (this.empty()) throw new Error("Queue is empty");
+
+        this.head = (this.head + 1) % MAX_SIZE;
+        return this.q[this.head];
+    }
+
+    front() {  // 큐의 맨 앞에 있는 데이터를 제거하지 않고 반환합니다.
+        if (this.empty()) throw new Error("Queue is empty");
+
+        return this.q[(this.head + 1) % MAX_SIZE];
     }
 }
 
