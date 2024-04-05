@@ -22,8 +22,7 @@ class Queue {
         if (this.empty()) {
             throw new Error("Queue is empty");
         }
-        this.head++;
-        return this.q[this.head - 1];
+        return this.q[this.head++];
     }
 
     front() {  // 큐의 맨 앞에 있는 데이터를 제거하지 않고 반환합니다.
