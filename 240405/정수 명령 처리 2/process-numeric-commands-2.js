@@ -18,6 +18,9 @@ class Queue {
     }
 
     size() {  // 큐에 들어있는 데이터 수를 반환합니다.
+        if (front === -1) {
+            return 0;
+        }
         return (this.tail - this.head + 1);
     }
 
