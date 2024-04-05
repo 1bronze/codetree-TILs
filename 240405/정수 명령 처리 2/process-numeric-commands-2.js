@@ -1,35 +1,35 @@
 class Queue {
-    constructor() {  // 빈 큐 하나를 생성합니다.
+    constructor() {
         this.q = [];
-        this.head = 0;
-        this.tail = -1;
+        this.head = -1; // head는 큐의 가장 첫 원소의 위치 바로 앞을 가리킵니다.
+        this.tail = -1; // tail은 큐의 가장 마지막 원소의 위치를 가리킵니다.
     }
 
-    push(item) {  // 큐의 맨 뒤에 데이터를 추가합니다.
+    push(item) {
         this.q.push(item);
         this.tail++;
     }
 
-    empty() {  // 큐가 비어있으면 true를 반환합니다.
-        return (this.head > this.tail);
+    empty() {
+        return (this.head === this.tail); // head와 tail이 같은지만으로 큐가 비었는지 여부를 쉽게 파악할 수 있습니다.
     }
 
-    size() {  // 큐에 들어있는 데이터 수를 반환합니다.
-        return (this.tail - this.head + 1);
+    size() {
+        return (this.tail - this.head); // head와 tail의 차가 곧 큐의 크기가 됩니다.
     }
 
-    pop() {  // 큐의 맨 앞에 있는 데이터를 반환하고 제거합니다.
+    pop() {
         if (this.empty()) {
             throw new Error("Queue is empty");
         }
-        return this.q[this.head++];
+        return this.q[++this.head];
     }
 
-    front() {  // 큐의 맨 앞에 있는 데이터를 제거하지 않고 반환합니다.
+    front() {
         if (this.empty()) {
             throw new Error("Queue is empty");
         }
-        return this.q[this.head];
+        return this.q[this.head + 1];
     }
 }
 
