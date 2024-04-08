@@ -1,5 +1,5 @@
 const fs = require("fs");
-const input = fs.readFileSync(0, "utf8").trim().split("\n");
+const input = fs.readFileSync(0).toString().trim().split("\n");
 
 const MAX_N = 20;
 const DIR_NUM = 4;
