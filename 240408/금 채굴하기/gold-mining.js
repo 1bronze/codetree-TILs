@@ -41,7 +41,7 @@ let ans = 0;
 
 for (let y = 0; y < n; y++) {
     for (let x = 0; x < n; x++) {
-        for (let k = 0; k < n; k++) {
+        for (let k = 0; k <= n; k++) {
             let goldCnt = getGoldCnt(y, x, k);
 
             if (goldCnt * m >= k * k + (k + 1) * (k + 1)) {
