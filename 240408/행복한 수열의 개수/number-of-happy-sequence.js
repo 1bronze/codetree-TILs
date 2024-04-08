@@ -16,6 +16,7 @@ for (let y = 0; y < n; y++) {
             tmp = 1;
         }
     }
+    cnt = Math.max(cnt, tmp);
     if (cnt >= m) ans++;
 }
 
@@ -28,6 +29,7 @@ for (let x = 0; x < n; x++) {
             tmp = 1;
         }
     }
+    cnt = Math.max(cnt, tmp);
     if (cnt >= m) ans++;
 }
 
