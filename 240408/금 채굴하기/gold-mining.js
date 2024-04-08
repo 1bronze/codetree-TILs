@@ -15,7 +15,7 @@ function inRange(x, y) {
 
 // 주어진 k에 대하여 채굴 가능한 금의 개수를 반환합니다.
 function getNumOfGoldInBorder(row, col, k) {
-    const dxs = [1, 1, -1, -1], dys = [-1, 1, 1, -1];
+    const dx = [1, 1, -1, -1], dy = [-1, 1, 1, -1];
     
     if (k === 0) {
         return grid[row][col];
@@ -30,8 +30,8 @@ function getNumOfGoldInBorder(row, col, k) {
                 numOfGold += grid[currX][currY];
             }
 
-            currX += dxs[dir];
-            currY += dys[dir];
+            currX += dx[dir];
+            currY += dy[dir];
         }
     }
     
