@@ -1,60 +1,96 @@
 const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split("\n");
+const input = fs.readFileSync(0).toString().trim().split('\n');
 
-/*
+const INT_MIN = Number.MIN_SAFE_INTEGER;
 
-하나의 직사각형은 x1, x2, y1, y2 좌표를 가짐.
-
-두 직사각형을 A, B라고 하자.
-A의 각 좌표를 a_x1, a_x2, a_y1, a_y2라고 하자. (x1<x2, y1<y2)
-B의 각 좌표를 b_x1, b_x2, b_y1, b_y2라고 하자. (x1<x2, y1<y2)
-
-이때 겹치지 않을 조건은
-a_x2 < b_x1 || b_x2 < a_x1 || a_y2 < b_y1 || b_y2 < a_y1
-*/
-
+// 변수 선언 및 입력
 const [n, m] = input[0].split(' ').map(Number);
 const grid = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
+const board = Array.from(Array(n), () => Array(m).fill(0));
 
-let ans = -1000000000;
-
-function getSum(a_y1, a_y2, a_x1, a_x2, b_y1, b_y2, b_x1, b_x2) {
-    let sum = 0;
-    for (let y = a_y1; y <= a_y2; y++) {
-        for (let x = a_x1; x <= a_x2; x++) {
-            sum += grid[y][x];
+function clearBoard() {
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            board[i][j] = 0;
         }
     }
-    for (let y = b_y1; y <= b_y2; y++) {
-        for (let x = b_x1; x <= b_x2; x++) {
-            sum += grid[y][x];
-        }
-    }
-
-    return sum;
 }
 
-for (let a_y1 = 0; a_y1 < n; a_y1++) {
-    for (let a_y2 = a_y1; a_y2 < n; a_y2++) {
+function draw(x1, y1, x2, y2) {
+    for (let i = x1; i <= x2; i++) {
+        for (let j = y1; j <= y2; j++) {
+            board[i][j] += 1;
+        }
+    }
+}
 
-        for (let a_x1 = 0; a_x1 < m; a_x1++) {
-            for (let a_x2 = a_x1; a_x2 < m; a_x2++) {
+function checkBoard() {
+    // 동일한 칸을 2개의 직사각형이 모두 포함한다면
+    // 겹치게 됩니다.
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            if (board[i][j] >= 2) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
-                for (let b_y1 = 0; b_y1 < n; b_y1++) {
-                    for (let b_y2 = b_y1; b_y2 < n; b_y2++) {
+// (x1, y1), (x2, y2) 그리고
+// (x3, y3), (x4, y4) 로 이루어져있는
+// 두 직사각형이 겹치는지 확인하는 함수
+function overlapped(x1, y1, x2, y2, x3, y3, x4, y4) {
+    clearBoard();
+    draw(x1, y1, x2, y2);
+    draw(x3, y3, x4, y4);
+    return checkBoard();
+}
 
-                        for (let b_x1 = 0; b_x1 < m; b_x1++) {
-                            for (let b_x2 = b_x1; b_x2 < m; b_x2++) {
+function rectSum(x1, y1, x2, y2) {
+    return grid.slice(x1, x2 + 1).reduce((sum, row) => 
+        sum + row.slice(y1, y2 + 1).reduce((rowSum, value) => rowSum + value, 0), 0);
+}
 
-                                if (a_x2 < b_x1 || b_x2 < a_x1 || a_y2 < b_y1 || b_y2 < a_y1)
-                                    ans = Math.max(ans, getSum(a_y1, a_y2, a_x1, a_x2, b_y1, b_y2, b_x1, b_x2));
-                            }
-                        }
+// 첫 번째 직사각형이 (x1, y1), (x2, y2)를 양쪽 꼭지점으로 할 때
+// 두 번째 직사각형을 겹치지 않게 잘 잡아
+// 최대 합을 반환하는 함수
+function findMaxSumWithRect(x1, y1, x2, y2) {
+    let maxSum = INT_MIN;
+
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            for (let k = i; k < n; k++) {
+                for (let l = j; l < m; l++) {
+                    if (!overlapped(x1, y1, x2, y2, i, j, k, l)) {
+                        maxSum = Math.max(maxSum, 
+                                           rectSum(x1, y1, x2, y2) + 
+                                           rectSum(i, j, k, l));
                     }
                 }
             }
         }
     }
+    
+    return maxSum;
 }
 
+// 두 직사각형을 잘 잡았을 때의 최대 합을 반환하는 함수
+function findMaxSum() {
+    let maxSum = INT_MIN;
+    
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < m; j++) {
+            for (let k = i; k < n; k++) {
+                for (let l = j; l < m; l++) {
+                    maxSum = Math.max(maxSum, findMaxSumWithRect(i, j, k, l));
+                }
+            }
+        }
+    }
+    
+    return maxSum;
+}
+
+const ans = findMaxSum();
 console.log(ans);
