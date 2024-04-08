@@ -11,12 +11,9 @@ for (let y = 0; y < n; y++) {
     let cnt = 1; let tmp = 1;
     for (let x = 1; x < n; x++) {
         if (arr[y][x] === arr[y][x - 1]) tmp++;
-        else {
-            cnt = Math.max(cnt, tmp);
-            tmp = 1;
-        }
+        else tmp = 1;
+        cnt = Math.max(cnt, tmp);
     }
-    cnt = Math.max(cnt, tmp);
     if (cnt >= m) ans++;
 }
 
@@ -24,12 +21,9 @@ for (let x = 0; x < n; x++) {
     let cnt = 1; let tmp = 1;
     for (let y = 1; y < n; y++) {
         if (arr[y][x] === arr[y - 1][x]) tmp++;
-        else {
-            cnt = Math.max(cnt, tmp);
-            tmp = 1;
-        }
+        else tmp = 1;
+        cnt = Math.max(cnt, tmp);
     }
-    cnt = Math.max(cnt, tmp);
     if (cnt >= m) ans++;
 }
 
