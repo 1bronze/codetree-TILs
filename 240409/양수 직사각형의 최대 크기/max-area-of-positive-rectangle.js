@@ -4,7 +4,7 @@ const input = fs.readFileSync(0).toString().trim().split("\n");
 const [n, m] = input[0].split(" ").map(Number);
 const grid = input.slice(1, 1 + n).map(line => line.split(" ").map(Number));
 
-let ans = 0;
+let ans = -1;
 
 // 직사각형 좌표 설정
 for (let y1 = 0; y1 < n; y1++) {
