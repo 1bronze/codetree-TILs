@@ -10,7 +10,7 @@ let grid = [];
 let temp = Array.from(Array(n), () => Array(n).fill(0));
 
 for (let i = 1; i <= n; i++) {
-    grid.push(input[i].split(' ').map(Number));
+    grid.push(input[i].trim().split(' ').map(Number));
 }
 
 function shift(x, y, k, l, moveDir) {
