@@ -3,8 +3,8 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
 const [n, t] = input[0].split(' ').map(Number);
-let u = input[1].split(' ').map(Number);
-let d = input[2].split(' ').map(Number);
+let u = input[1].trim().split(' ').map(Number);
+let d = input[2].trim().split(' ').map(Number);
 
 for(let _ = 0; _ < t; _++) {
     // Step 1
