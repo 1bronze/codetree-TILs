@@ -1,91 +1,64 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
+const CCW = 0;
+const CW = 1;
+
+// 변수 선언 및 입력:
 const n = Number(input[0]);
-const grid = [0].concat(input.slice(1, 1 + n).map(line => [0].concat(line.split(" ").map(Number))));
-const [r, c, m1, m2, m3, m4, dir] = input[1 + n].split(" ").map(Number);
-
-const tmp = [];
-
-const dy = [0, -1, -1, 1, 1];
-const dx = [0, 1, -1, -1, 1];
-
-let y = r;
-let x = c;
-tmp.push(grid[y][x]);
-
-for (let i = 0; i < m1; i++) {
-    y += dy[1];
-    x += dx[1];
-    tmp.push(grid[y][x]);
-}
-
-for (let i = 0; i < m2; i++) {
-    y += dy[2];
-    x += dx[2];
-    tmp.push(grid[y][x]);
-}
-
-for (let i = 0; i < m3; i++) {
-    y += dy[3];
-    x += dx[3];
-    tmp.push(grid[y][x]);
-}
-
-for (let i = 0; i < m4 - 1; i++) {
-    y += dy[4];
-    x += dx[4];
-    tmp.push(grid[y][x]);
-}
-
-// console.log(tmp.join(" "));
-
-if (dir === 0) { // 반시계
-    let target = tmp[tmp.length - 1];
-    for (let i = tmp.length - 1; i > 0; i--)
-        tmp[i] = tmp[i - 1];
-    tmp[0] = target;
-} else { // 시계
-    let target = tmp[0];
-    for (let i = 0; i < tmp.length - 1; i++)
-        tmp[i] = tmp[i + 1];
-    tmp[tmp.length - 1] = target;
-}
-
-// console.log(tmp.join(" "));
-
-y = r;
-x = c;
-
-let pointer = 0;
-grid[y][x] = tmp[pointer++];
-
-for (let i = 0; i < m1; i++) {
-    y += dy[1];
-    x += dx[1];
-    grid[y][x] = tmp[pointer++];
-}
-
-for (let i = 0; i < m2; i++) {
-    y += dy[2];
-    x += dx[2];
-    grid[y][x] = tmp[pointer++];
-}
-
-for (let i = 0; i < m3; i++) {
-    y += dy[3];
-    x += dx[3];
-    grid[y][x] = tmp[pointer++];
-}
-
-for (let i = 0; i < m4 - 1; i++) {
-    y += dy[4];
-    x += dx[4];
-    grid[y][x] = tmp[pointer++];
-}
+let grid = [];
+let temp = Array.from(Array(n), () => Array(n).fill(0));
 
 for (let i = 1; i <= n; i++) {
-    console.log(grid[i].slice(1, 1 + n).join(" "));
+    grid.push(input[i].split(' ').map(Number));
 }
 
-// console.log(tmp.join(" "));
+function shift(x, y, k, l, moveDir) {
+    let dx, dy, moveNums;
+    if (moveDir === CCW) {
+        dx = [-1, -1, 1, 1];
+        dy = [1, -1, -1, 1];
+        moveNums = [k, l, k, l];
+    } else {
+        dx = [-1, -1, 1, 1];
+        dy = [-1, 1, 1, -1];
+        moveNums = [l, k, l, k];
+    }
+    
+    // Step1. temp 배열에 grid 값을 복사합니다.
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            temp[i][j] = grid[i][j];
+        }
+    }
+
+    // Step2. 기울어진 직사각형의 경계를 쭉 따라가면서
+    //        숫자를 한 칸씩 밀었을 때의 결과를
+    //        temp에 저장합니다.
+    moveNums.forEach((moveNum, index) => {
+        for (let i = 0; i < moveNum; i++) {
+            const nx = x + dx[index];
+            const ny = y + dy[index];
+            temp[nx][ny] = grid[x][y];
+            x = nx;
+            y = ny;
+        }
+    });
+
+    // Step3. temp값을 grid에 옮겨줍니다.
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            grid[i][j] = temp[i][j];
+        }
+    }
+}
+
+const [x, y, m1, m2, m3, m4, d] = input[n + 1].split(' ').map(Number);
+shift(x - 1, y - 1, m1, m2, d);
+
+// 출력
+let result = '';
+for (let i = 0; i < n; i++) {
+    result += grid[i].join(' ') + '\n';
+}
+console.log(result);
