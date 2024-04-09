@@ -32,11 +32,13 @@ for (let i = 0; i < m3; i++) {
     tmp.push(grid[y][x]);
 }
 
-for (let i = 0; i < m4; i++) {
+for (let i = 0; i < m4 - 1; i++) {
     y += dy[4];
     x += dx[4];
     tmp.push(grid[y][x]);
 }
+
+// console.log(tmp.join(" "));
 
 if (dir === 0) { // 반시계
     let target = tmp[tmp.length - 1];
@@ -49,6 +51,8 @@ if (dir === 0) { // 반시계
         tmp[i] = tmp[i + 1];
     tmp[tmp.length - 1] = target;
 }
+
+// console.log(tmp.join(" "));
 
 y = r;
 x = c;
@@ -83,3 +87,5 @@ for (let i = 0; i < m4 - 1; i++) {
 for (let i = 1; i <= n; i++) {
     console.log(grid[i].slice(1, 1 + n).join(" "));
 }
+
+// console.log(tmp.join(" "));
