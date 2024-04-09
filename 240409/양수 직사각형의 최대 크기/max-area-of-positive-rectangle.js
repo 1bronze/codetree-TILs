@@ -1,27 +1,35 @@
 const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split("\n");
+const input = fs.readFileSync(0).toString().trim().split('\n');
 
-const [n, m] = input[0].split(" ").map(Number);
-const grid = input.slice(1, 1 + n).map(line => line.split(" ").map(Number));
+// 변수 선언 및 입력:
+const [n, m] = input[0].split(' ').map(Number);
+const grid = input.slice(1, n + 1).map(line => line.split(' ').map(Number));
+
+// (x1, y1), (x2, y2)를 두 꼭지점으로 하는
+// 직사각형에 있는 값이 전부 양수인지 판단합니다.
+function positiveRect(x1, y1, x2, y2) {
+    for(let i = x1; i <= x2; i++) {
+        for(let j = y1; j <= y2; j++) {
+            if(grid[i][j] <= 0) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
 
 let ans = -1;
 
-// 직사각형 좌표 설정
-for (let y1 = 0; y1 < n; y1++) {
-    for (let x1 = 0; x1 < m; x1++) {
-        for (let y2 = y1; y2 < n; y2++) {
-            for (let x2 = x1; x2 < m; x2++) {
-                
-                let isPossible = true;
-                // 양수인지 확인
-                for (let y = y1; y <= y2; y++) {
-                    for (let x = x1; x <= x2; x++) {
-                        if (grid[y][x] <= 0) isPossible = false;
-                    }
-                }
-
-                if (isPossible) {
-                    ans = Math.max(ans, (y2 - y1 + 1) * (x2 - x1 + 1));
+// 직사각형의 양쪽 두 꼭지점 (i, j), (k, l)
+// 를 정하여
+// 해당 직사각형 안에 있는 값이 전부 양수일 때만
+// 크기를 갱신합니다.
+for(let i = 0; i < n; i++) {
+    for(let j = 0; j < m; j++) {
+        for(let k = i; k < n; k++) {
+            for(let l = j; l < m; l++) {
+                if(positiveRect(i, j, k, l)) {
+                    ans = Math.max(ans, (k - i + 1) * (l - j + 1));
                 }
             }
         }
