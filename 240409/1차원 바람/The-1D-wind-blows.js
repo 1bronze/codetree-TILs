@@ -1,78 +1,96 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
-const [n, m, q] = input[0].split(" ").map(Number);
-const grid = input.slice(1, 1 + n).map(line => line.split(" "));
-const commands = input.slice(1 + n, 1 + n + q).map(command => {
-    const [row, dir] = command.split(" ");
-    return [Number(row) - 1, dir];
-    });
+const SHIFT_RIGHT = 0;
+const SHIFT_LEFT = 1;
 
-function move(row, dir) {
-    if (dir === 'L') {
-        let tmp = grid[row][m - 1];
-        for (let x = m - 1; x > 0; x--) {
-            grid[row][x] = grid[row][x - 1];
-        }
-        grid[row][0] = tmp;
+// 변수 선언 및 입력
+const [n, m, q] = input[0].split(' ').map(Number);
+const a = [0].concat(input.slice(1, 1 + n).map(line => [0].concat(line.split(" "))));
+const c = input.slice(1 + n, 1 + n + q).map(line => line.split(" "));
+
+// row 줄의 원소들을 dir 방향에 따라 한 칸 밀어줍니다.
+// dir이 0인 경우 오른쪽으로
+// dir이 1인 경우 왼쪽으로 밀어야 합니다.
+function shift(row, dir) {
+    // 오른쪽으로 밀어야 하는 경우
+    if (dir === SHIFT_RIGHT) {
+        let temp = a[row][m];
+        for(let col = m; col >= 2; col--)
+            a[row][col] = a[row][col - 1];
+        a[row][1] = temp;
     } else {
-        let tmp = grid[row][0];
-        for (let x = 0; x < m - 1; x++) {
-            grid[row][x] = grid[row][x + 1];
-        }
-        grid[row][m - 1] = tmp;
+        let temp = a[row][1];
+        for(let col = 1; col <= m - 1; col++)
+            a[row][col] = a[row][col + 1];
+        a[row][m] = temp;
     }
 }
 
-commands.forEach(([row, dir]) => {
+// row1, row2 행에 대해 같은 열에 같은 숫자를 갖는 경우가
+// 있는지를 찾아줍니다.
+function hasSameNumber(row1, row2) {
+    for(let col = 1; col <= m; col++)
+        if(a[row1][col] == a[row2][col])
+            return true;
+    
+    return false;
+}
 
-    move(row, dir);
+// 주어진 방향으로부터 반대 방향의 값을 반환합니다.
+function flip(dir) {
+    return dir === SHIFT_LEFT ? SHIFT_RIGHT : SHIFT_LEFT;
+}
 
-    // 윗방향으로 확산
-    for (let nextRow = row - 1; nextRow >= 0; nextRow--) {
-        let curRow = nextRow + 1;
-
-        let isPossible = false;
-        for (let x = 0; x < m; x++) {
-            if (grid[curRow][x] === grid[nextRow][x]) {
-                isPossible = true;
-            }
+// 조건에 맞춰 움직여봅니다.
+// dir이 SHIFT_RIGHT 인 경우 오른쪽으로
+// dir이 SHIFT_LEFT 인 경우 왼쪽으로 밀어야 합니다.
+function simulate(startRow, startDir) {
+    // Step1
+    // 바람이 처음으로 불어 온 행의 숫자들을 해당 방향으로 밀어줍니다.
+    shift(startRow, startDir);
+    
+    // 그 이후부터는 반전된 방향에 영향을 받으므로, 방향을 미리 반전 시켜줍니다.
+    startDir = flip(startDir);
+    
+    // Step2
+    // 위 방향으로 전파를 계속 시도해봅니다.
+    for(let row = startRow, dir = startDir; row >= 2; row--) {
+        // 인접한 행끼리 같은 숫자를 가지고 있다면
+        // 위의 행을 한 칸 shift하고
+        // 방향을 반대로 바꿔 계속 전파를 진행합니다.
+        if(hasSameNumber(row, row - 1)) {
+            shift(row - 1, dir);
+            dir = flip(dir);
         }
-
-        if (isPossible) {
-            let nextDir = (dir === 'L') ? (row % 2 === nextRow % 2 ? 'L' : 'R') : (row % 2 === nextRow % 2 ? 'R' : 'L');
-
-            move(nextRow, nextDir);
-        } else {
+        // 같은 숫자가 없다면 전파를 멈춥니다.
+        else
             break;
-        }
     }
 
-    // 아래방향으로 확산
-    for (let nextRow = row + 1; nextRow < n; nextRow++) {
-        let curRow = nextRow - 1;
-
-        let isPossible = false;
-        for (let x = 0; x < m; x++) {
-            if (grid[curRow][x] === grid[nextRow][x]) {
-                isPossible = true;
-            }
+    // Step3
+    // 아래 방향으로 전파를 계속 시도해봅니다.
+    for(let row = startRow, dir = startDir; row <= n - 1; row++) {
+        // 인접한 행끼리 같은 숫자를 가지고 있다면
+        // 아래 행을 한 칸 shift하고
+        // 방향을 반대로 바꿔 계속 전파를 진행합니다.
+        if(hasSameNumber(row, row + 1)) {
+            shift(row + 1, dir);
+            dir = flip(dir);
         }
-
-        if (isPossible) {
-            let nextDir = (dir === 'L') ? (row % 2 === nextRow % 2 ? 'L' : 'R') : (row % 2 === nextRow % 2 ? 'R' : 'L');
-            move(nextRow, nextDir);
-        } else {
+        // 같은 숫자가 없다면 전파를 멈춥니다.
+        else
             break;
-        }
     }
+}
+
+c.forEach(([r, d]) => {
+    // 조건에 맞춰 움직여봅니다.
+    simulate(Number(r), d === 'L' ? SHIFT_RIGHT : SHIFT_LEFT)
 });
 
-let ans = "";
-for (let i = 0; i < n; i++) {
-    for (let j = 0; j < m; j++) {
-        ans += grid[i][j] + " ";
-    }
-    ans += "\n";
+
+// 출력
+for (let row = 1; row <= n; row++) {
+    console.log(a[row].slice(1).join(' '));
 }
-console.log(ans);
