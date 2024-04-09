@@ -5,7 +5,6 @@ const n = Number(input[0]);
 const grid = [0].concat(input.slice(1, 1 + n).map(line => [0].concat(line.split(" ").map(Number))));
 const [r, c, m1, m2, m3, m4, dir] = input[1 + n].split(" ").map(Number);
 
-// const point = Array.from(Array(5), () => Array(2).fill(0));
 const tmp = [];
 
 const dy = [0, -1, -1, 1, 1];
@@ -46,7 +45,7 @@ if (dir === 0) { // 반시계
     tmp[0] = target;
 } else { // 시계
     let target = tmp[0];
-    for (let i = 0; i < tmp.length - 1; i--)
+    for (let i = 0; i < tmp.length - 1; i++)
         tmp[i] = tmp[i + 1];
     tmp[tmp.length - 1] = target;
 }
@@ -75,7 +74,7 @@ for (let i = 0; i < m3; i++) {
     grid[y][x] = tmp[pointer++];
 }
 
-for (let i = 0; i < m4; i++) {
+for (let i = 0; i < m4 - 1; i++) {
     y += dy[4];
     x += dx[4];
     grid[y][x] = tmp[pointer++];
