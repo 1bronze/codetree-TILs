@@ -1,37 +1,51 @@
 const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split('\n');
+const input = fs.readFileSync(0).toString().trim().split("\n");
 
-const str = input[0].split("");
+// 변수 선언 및 입력:
+let A = input[0];
 
-let ans = 100;
+function runLengthEncoding(target) {
+    // 이 함수는 input 문자열을 Run-Length-Encoding한 결과를 반환합니다.
+    let encoded = "";
 
-function encoding() {
-    let ret = "";
-
-    let char = str[0];
-    let cnt = 1;
-
-    for (let i = 1; i < str.length; i++) {
-        if (str[i] === str[i - 1]) cnt++;
-        else {
-            ret += char + cnt;
-            char = str[i];
-            cnt = 1;
+    // 입력의 첫번째 값을 읽고 초기화합니다.
+    let currChar = target[0];
+    let numChar = 1;
+    for (const targetChar of target.substring(1)) {
+        if (targetChar === currChar) {
+            numChar += 1;
+        } else {
+            // 지금까지 세어온 currChar와 numChar를 기록합니다.
+            encoded += currChar;
+            encoded += String(numChar);
+    
+            // currChar와 numChar를 현재 값으로 초기화합니다.
+            currChar = targetChar;
+            numChar = 1;
         }
     }
-    ret += char + cnt;
-
-    return ret;
+    
+    // 마지막 덩어리에 해당하는 currChar와 numChar를 기록합니다.
+    encoded += currChar;
+    encoded += String(numChar);
+    return encoded;
 }
 
-for (let i = 0; i < str.length; i++) {
-    let tmp = str[str.length - 1];
-    for (let j = str.length - 1; j > 0; j--)
-        str[j] = str[j - 1];
-    str[0] = tmp;
+let minLength = runLengthEncoding(A).length; // 초기값은 shift안했을 때의 값
+const n = A.length;
+let numShift = n - 1; // 0부터 length - 1
 
-    const encoded = encoding();
-    ans = Math.min(ans, encoded.length);
+while (numShift) {
+    // 문자열 A를 오른쪽으로 1번 shift합니다.
+    A = A.slice(-1) + A.slice(0, -1);
+    
+    const length = runLengthEncoding(A).length;
+    if (minLength > length) {
+        minLength = length;
+    }
+    
+    numShift -= 1;
 }
 
-console.log(ans);
+// 출력
+console.log(minLength);
