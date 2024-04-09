@@ -2,7 +2,7 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split("\n");
 
 const [n, t] = input[0].split(" ").map(Number);
-const arr = input[1].split(" ").map(Number).concat(input[2].split(" ").map(Number));
+const arr = input[1].trim().split(" ").map(Number).concat(input[2].trim().split(" ").map(Number));
 
 for (let i = 0; i < t; i++) {
     let tmp = arr[2 * n - 1];
