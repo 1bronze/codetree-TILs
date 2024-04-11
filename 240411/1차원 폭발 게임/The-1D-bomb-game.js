@@ -2,60 +2,45 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
 const [n, m] = input[0].split(' ').map(Number);
-const arr = input.slice(1, 1 + n).map(Number);
+const numbers = input.slice(1, 1 + n).map(Number);
 
-function bomb() {
-    let flag = false;
-
-    let startIdx = -1; // 시작 인덱스 바로 앞
-    let endIdx = -1; // 마지막 인덱스
-
-    // let tmpArr = [];
-    for (let i = 0; i < n; i++) {
-        if (i === 0 || arr[i] !== arr[i - 1]) {
-            if (endIdx - startIdx >= m) {
-                for (let j = startIdx + 1; j <= endIdx; j++) {
-                    arr[j] = 0;
-                }
-                flag = true;
-            }
-
-            startIdx = i - 1;
-            endIdx = i;
-        } else {
-            endIdx++;
+// 주어진 시작점에 대하여
+// 부분 수열의 끝 위치를 반환합니다.
+function getEndIdxOfExplosion(startIdx, currNum) {
+    for (let endIdx = startIdx + 1; endIdx < numbers.length; endIdx++) {
+        if (numbers[endIdx] !== currNum) {
+            return endIdx - 1;
         }
     }
-
-    let tmp = 0;
-    for (let i = 0; i < n; i++) {
-        if (arr[i] !== 0) {
-            arr[tmp++] = arr[i];
-        }
-    }
-    for (let i = tmp; i < n; i++) {
-        arr[i] = 0;
-    }
-
-    return flag;
+    return numbers.length - 1;
 }
 
 while (true) {
-    let flag = bomb();
+    let didExplode = false;
+    let currIdx = 0;
 
-    if (!flag) break;
-}
+    while (currIdx < numbers.length) {
+        let endIdx = getEndIdxOfExplosion(currIdx, numbers[currIdx]);
 
-let size = 0;
-let ans = "";
-for (let i = 0; i < n; i++) {
-    if (arr[i] !== 0) {
-        size++;
-        ans += `${arr[i]}\n`;
-    } else {
+        if (endIdx - currIdx + 1 >= m) {
+            // 연속한 숫자의 개수가 m개 이상이면
+            // 폭탄이 터질 수 있는 경우 해당 부분 수열을 잘라내고
+            // 폭탄이 터졌음을 기록해줍니다.
+            numbers.splice(currIdx, endIdx - currIdx + 1);
+            didExplode = true;
+        } else {
+            // 주어진 시작 원소에 대하여 폭탄이 터질 수 없는 경우
+            // 다음 원소에 대하여 탐색하여 줍니다.
+            currIdx += 1;
+        }
+    }
+
+    if (!didExplode) {
         break;
     }
 }
 
-console.log(size);
-console.log(ans);
+console.log(numbers.length);
+numbers.forEach(number => {
+    console.log(number);
+});
