@@ -3,7 +3,7 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
 const [n, m] = input[0].split(' ').map(Number);
-let grid = input.slice(1, n + 1).map(line => line.split(' ').map(Number));
+let grid = input.slice(1, n + 1).map(line => line.trim().split(' ').map(Number));
 let nextGrid = Array.from(Array(n), () => Array(n).fill(0));
 
 const OUT_OF_GRID = -1;
