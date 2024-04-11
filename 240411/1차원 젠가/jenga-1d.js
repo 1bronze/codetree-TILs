@@ -3,7 +3,7 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
 const n = Number(input[0]);
-let numbers = [0].concat(input.slice(1, 1 + n).map(Number));
+let numbers = input.slice(1, 1 + n).map(Number);
 let endOfArray = n;
 
 // 입력 배열에서 지우고자 하는 부분 수열을 삭제합니다.
