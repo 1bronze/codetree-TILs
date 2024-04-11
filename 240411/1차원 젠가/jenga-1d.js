@@ -1,49 +1,36 @@
 const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split("\n");
+const input = fs.readFileSync(0).toString().trim().split('\n');
 
-let n = Number(input[0]);
-let arr = [0].concat(input.slice(1, 1 + n).map(Number));
+// 변수 선언 및 입력
+const n = Number(input[0]);
+let numbers = [0].concat(input.slice(1, 1 + n).map(Number));
+let endOfArray = n;
 
-let [s1, e1] = input[1 + n].split(" ").map(Number);
-let [s2, e2] = input[2 + n].split(" ").map(Number);
+// 입력 배열에서 지우고자 하는 부분 수열을 삭제합니다.
+const cutArray = (startIdx, endIdx) => {
+    let tempArr = [];
 
-const tmpArr = Array(n + 1).fill(0);
-
-let tmpRow = 1;
-let size = 0;
-
-for (let r = 1; r <= n; r++) {
-    if (r >= s1 && r <= e1) continue;
-
-    tmpArr[tmpRow++] = arr[r];
-    size++;
-}
-
-for (let r = 1; r <= n; r++) {
-    if (r <= size) arr[r] = tmpArr[r];
-    else arr[r] = 0;
-}
-
-tmpRow = 1;
-size = 0;
-
-for (let r = 1; r <= n; r++) {
-    if (r >= s2 && r <= e2) continue;
-    if (arr[r] === 0) continue;
-
-    tmpArr[tmpRow++] = arr[r];
-    size++;
-}
-
-for (let r = 1; r <= n; r++) {
-    if (r <= size) arr[r] = tmpArr[r];
-    else arr[r] = 0;
-}
-
-console.log(size);
-
-if (size !== 0) {
-    for (let r = 1; r <= size; r++) {
-        console.log(arr[r]);
+    // 구간 외의 부분만 temp 배열에 순서대로 저장합니다.
+    for (let i = 0; i < endOfArray; i++) {
+        if (i < startIdx || i > endIdx) {
+            tempArr.push(numbers[i]);
+        }
     }
+
+    // temp 배열을 다시 numbers 배열로 옮겨줍니다.
+    endOfArray = tempArr.length;
+    numbers = [...tempArr];
+}
+
+// 두 번에 걸쳐 지우는 과정을 반복합니다.
+for (let i = 1; i <= 2; i++) {
+    const [s, e] = input[n + i].split(' ').map(Number);
+    // [s, e] 구간을 삭제합니다.
+    cutArray(s - 1, e - 1);
+}
+
+// 출력:
+console.log(endOfArray);
+for (let i = 0; i < endOfArray; i++) {
+    console.log(numbers[i]);
 }
