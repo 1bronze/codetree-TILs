@@ -8,23 +8,18 @@ let endOfArray = n;
 
 // 입력 배열에서 지우고자 하는 부분 수열을 삭제합니다.
 const cutArray = (startIdx, endIdx) => {
-    let tempArr = [];
+    const cutLen = endIdx - startIdx + 1;
 
-    // 구간 외의 부분만 temp 배열에 순서대로 저장합니다.
-    for (let i = 0; i < endOfArray; i++) {
-        if (i < startIdx || i > endIdx) {
-            tempArr.push(numbers[i]);
-        }
+    for (let i = endIdx + 1; i < endOfArray; i++) {
+        numbers[i - cutLen] = numbers[i];
     }
 
-    // temp 배열을 다시 numbers 배열로 옮겨줍니다.
-    endOfArray = tempArr.length;
-    numbers = [...tempArr];
-}
+    endOfArray -= cutLen;
+};
 
 // 두 번에 걸쳐 지우는 과정을 반복합니다.
-for (let i = 1; i <= 2; i++) {
-    const [s, e] = input[n + i].split(' ').map(Number);
+for (let i = n + 1; i < n + 3; i++) {
+    const [s, e] = input[i].split(' ').map(Number);
     // [s, e] 구간을 삭제합니다.
     cutArray(s - 1, e - 1);
 }
