@@ -5,7 +5,6 @@ const n = Number(input[0]);
 const grid = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 const nextGrid = Array(n).fill().map(() => Array(n).fill(0));
 const [r, c] = input[1 + n].split(' ').map(Number);
-const d = grid[r][c];
 
 function inBombRange(x, y, centerX, centerY, bombRange) {
     return (x === centerX || y === centerY) && 
