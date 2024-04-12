@@ -2,7 +2,7 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
 const [n, m, k] = input[0].split(' ').map(Number);
-const grid = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
+const grid = input.slice(1, 1 + n).map(line => line.trim().split(' ').map(Number));
 
 function check(y, x, len) {
     if (y === n - 1) return false;
