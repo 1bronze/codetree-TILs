@@ -13,6 +13,12 @@ function testPrint() {
 function canBomb(c) {
     let cnt = 0;
     let max = 0;
+
+    if (grid[0][c] == 1) {
+        cnt = 1;
+        max = 1;
+    }
+
     for (let r = 1; r < n; r++) {
         if (grid[r][c] === 0) continue;
 
