@@ -22,6 +22,9 @@ function drop(y, x, len) {
     }
 }
 
+for (let i = k - 1; i < k + m - 1; i++)
+    grid[0][i] = 1;
+
 let r = 0;
 while (check(r, k - 1, m)) 
     drop(r++, k - 1, m)
