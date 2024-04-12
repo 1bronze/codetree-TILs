@@ -1,130 +1,113 @@
+const BLANK = -1;
+const WILL_EXPLODE = 0;
+
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
+// 변수 선언 및 입력
 const [n, m, k] = input[0].split(' ').map(Number);
-let grid = input.slice(1, n + 1).map(line => line.trim().split(' ').map(Number));
+let numbers2d = input.slice(1, n + 1).map(line => line.trim().split(' ').map(Number));
+let numbers1d = Array(n).fill(0);
 
-function testPrint() {
-    for (let r = 0; r < n; r++)
-        console.log(grid[r].join(" "));
-        console.log();
-}
-
-function canBomb(c) {
-    let cnt = 0;
-    let max = 0;
-
-    if (grid[0][c] == 1) {
-        cnt = 1;
-        max = 1;
-    }
-
-    for (let r = 1; r < n; r++) {
-        if (grid[r][c] === 0) continue;
-
-        if (cnt === 0) cnt = 1;
-        if (grid[r][c] === grid[r - 1][c]) 
-            cnt++;
-        else {
-            max = Math.max(max, cnt);
-            cnt = 1;
+// 주어진 시작점에 대하여
+// 부분 수열의 끝 위치를 반환합니다.
+function getEndIdxOfExplosion(startIdx, currNum) {
+    for (let endIdx = startIdx + 1; endIdx < numbers1d.length; endIdx++) {
+        if (numbers1d[endIdx] !== currNum) {
+            return endIdx - 1;
         }
     }
-    max = Math.max(max, cnt);
-    return (max>=m);
+    return numbers1d.length - 1;
 }
 
-function bomb(c) {
-    let startRow = 0;
-    let endRow = 0;
-
-    for (let r = 1; r < n; r++) {
-        if (grid[r][c] !== grid[r - 1][c]) {
-            if (endRow - startRow + 1 >= m) {
-                for (let i = startRow; i <= endRow; i++) {
-                    grid[i][c] = 0;
-                } 
-            } 
-            startRow = r;
-            endRow = r;
-        } else {
-            endRow++;
+function explode() {
+    while (true) {
+        let didExplode = false;
+        let currIdx = 0;
+    
+        while (currIdx < numbers1d.length) {
+            let endIdx = getEndIdxOfExplosion(currIdx, numbers1d[currIdx]);
+        
+            if (endIdx - currIdx + 1 >= m) {
+                // 연속한 숫자의 개수가 m개 이상이면
+                // 폭탄이 터질 수 있는 경우 해당 부분 수열을 잘라내고
+                // 폭탄이 터졌음을 기록해줍니다.
+                numbers1d.splice(currIdx, endIdx - currIdx + 1);
+                didExplode = true;
+            } else {
+                // 주어진 시작 원소에 대하여 폭탄이 터질 수 없는 경우
+                // 다음 원소에 대하여 탐색하여 줍니다.
+                currIdx = endIdx + 1;
+            }
         }
-    }
-    if (endRow - startRow + 1 >= m) {
-        for (let i = startRow; i <= endRow; i++) {
-            grid[i][c] = 0;
+
+        if (!didExplode) {
+            break;
         }
     }
 }
 
-function drop(c) {
-    let tmpArr = Array(n).fill(0);
-    let tmpRow = 0;
-    for (let r = 0; r < n; r++) {
-        if (grid[r][c] !== 0) {
-            tmpArr[tmpRow++] = grid[r][c];
-        }
-    }
+// ##################################################################################
+// ##			이 줄을 기준으로 위에 있는 함수들에 대한 설명은 1차원 폭발 게임을 참조해주세요     	  ##
+// ##################################################################################
 
-    let r = n - 1;
-    for (let tmpRow = n - 1; tmpRow >= 0; tmpRow--) {
-        if (tmpArr[tmpRow] === 0) continue;
-        grid[r--][c] = tmpArr[tmpRow];
-    }
 
-    for (let i = r; i >= 0; i--) {
-        grid[i][c] = 0;
+// 격자의 특정 열을 일차원 배열에 복사해줍니다.
+function copyColumn(col) {
+    numbers1d = numbers2d.map(row => row[col]).filter(value => value !== BLANK);
+}
+
+// 폭탄이 터진 결과를 격자의 해당 열에 복사해줍니다.
+function copyResult(col) {
+    for (let row = n - 1; row >= 0; row--) {
+        numbers2d[row][col] = numbers1d.length ? numbers1d.pop() : BLANK;
     }
 }
 
+// 폭탄이 터지는 과정을 시뮬레이션 합니다.
+function simulate() {
+    for (let col = 0; col < n; col++) {
+        copyColumn(col);
+        explode();
+        copyResult(col);
+    }
+}
+
+// 시계 방향으로 90도 회전해줍니다.
 function rotate() {
-    let tmpGrid = Array.from(Array(n), () => Array(n).fill(0));
-
-    for (let y = 0; y < n; y++)
-        for (let x = 0; x < n; x++)
-            tmpGrid[x][n - y - 1] = grid[y][x];
-
-    for (let y = 0; y < n; y++)
-        for (let x = 0; x < n; x++)
-            grid[y][x] = tmpGrid[y][x];
-}
-
-function count() {
-    let cnt = 0;
+    // 빈 칸으로 초기화 된 임시 격자를 선언합니다.
+    let temp2d = Array.from(Array(n), () => Array(n).fill(BLANK));
     
-    for (let y = 0; y < n; y++)
-        for (let x = 0; x < n; x++)
-            if (grid[y][x] !== 0) cnt++;
-    
-    return cnt;
-}
-
-function solve() {
-    for (let i = 0; i < n; i++) {
-        while (canBomb(i)) {
-            bomb(i);
-            drop(i);
-        }
-    }
-
-    for (let i = 0; i < k; i++) {
-        rotate();
-        for (let j = 0; j < n; j++)
-            drop(j);
-
-        for (let j = 0; j < n; j++) {
-            while (canBomb(j)) {
-                bomb(j);
-                drop(j);
+    // 기존 격자를 시계 방향으로 90도 회전했을 때의 결과를
+    // 임시 격자에 저장해줍니다.
+    for (let i = n - 1; i >= 0; i--) {
+        let currIdx = n - 1;
+        for (let j = n - 1; j >= 0; j--) {
+            if (numbers2d[i][j] !== BLANK) {
+                temp2d[currIdx][n - i - 1] = numbers2d[i][j];
+                currIdx--;
             }
         }
     }
-
-    let ans = count();
-    console.log(ans);
+    
+    // 임시 격자에 저장된 값을 기존 격자에 복사합니다.
+    numbers2d = temp2d;
 }
 
-// testPrint();
+// 주어진 입력에 따라 폭탄이 터지는 것을 시뮬레이션 합니다.
+simulate();
+for (let i = 0; i < k; i++) {
+    rotate();
+    simulate();
+}
 
-solve();
+// 격자를 순회하며 남아 있는 폭탄의 개수를 세줍니다.
+
+
+let answer = 0;
+    
+for (let y = 0; y < n; y++)
+    for (let x = 0; x < n; x++)
+        if (numbers2d[y][x] !== BLANK) answer++;
+
+console.log(answer);
