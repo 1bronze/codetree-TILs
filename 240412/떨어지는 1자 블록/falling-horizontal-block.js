@@ -1,8 +1,8 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
-let [n, m, k] = input[0].split(' ').map(Number);
-let grid = input.slice(1, 1 + n).map(line => line.trim().split(' ').map(Number));
+const [n, m, k] = input[0].split(' ').map(Number);
+const grid = input.slice(1, 1 + n).map(line => line.trim().split(' ').map(Number));
 
 // 해당 row에 [colS, colE] 열에
 // 전부 블럭이 없는지를 확인합니다.
@@ -18,7 +18,7 @@ function allBlank(row, colS, colE) {
 // 그 다음 위치에 최초로 블럭이 존재하는 순간임을 이용합니다.
 function getTargetRow() {
     for (let row = 0; row < n - 1; row++) {
-        if (!allBlank(row + 1, k, k + m - 1)) {
+        if (!allBlank(row + 1, k - 1, k + m - 2)) {
             return row;
         }
     }
@@ -26,13 +26,11 @@ function getTargetRow() {
     return n - 1;
 }
 
-k--;
-
 // 최종적으로 멈추게 될 위치를 구합니다.
 const targetRow = getTargetRow();
 
 // 최종 위치에 전부 블럭을 표시합니다.
-for (let col = k; col < k + m; col++) {
+for (let col = k - 1; col < k - 1 + m; col++) {
     grid[targetRow][col] = 1;
 }
 
