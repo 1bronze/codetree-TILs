@@ -6,7 +6,7 @@ const DIR_NUM = 4;
 // 변수 선언 및 입력
 const n = Number(input[0]);
 let [currX, currY] = input[1].split(' ').map(Number);
-const a = Array.from(Array(n + 1), () => Array(n + 1).fill(0));
+const a = [0].concat(input.slice(2, 2 + n).map(line => [0].concat(line.trim().split(''))));
 
 // 미로 탈출이 불가능한지 여부를 판단하기 위해
 // 동일한 위치에 동일한 방향으로 진행했던 적이 있는지를
@@ -43,9 +43,10 @@ function simulate() {
     // 현재 상황에 해당하는 곳에 visited 값을 True로 설정합니다.
     visited[currX][currY][currDir] = true;
     
-    const dxs = [0, 1, 0, -1], dys = [1, 0, -1, 0];
+    const dx = [0, 1, 0, -1];
+    const dy = [1, 0, -1, 0];
     
-    const nextX = currX + dxs[currDir], nextY = currY + dys[currDir];
+    const nextX = currX + dx[currDir], nextY = currY + dy[currDir];
     
     // Step1
     
@@ -67,8 +68,8 @@ function simulate() {
     // 바로 앞이 격자 안에서 이동할 수 있는 곳이라면
     else {
         // 그 방향으로 이동했다 가정했을 때 바로 오른쪽에 짚을 벽이 있는지 봅니다.
-        const rx = nextX + dxs[(currDir + 1) % 4];
-        const ry = nextY + dys[(currDir + 1) % 4];
+        const rx = nextX + dx[(currDir + 1) % 4];
+        const ry = nextY + dy[(currDir + 1) % 4];
         
         // Case2
         // 그대로 이동해도 바로 오른쪽에 짚을 벽이 있다면
@@ -84,14 +85,6 @@ function simulate() {
             currDir = (currDir + 1) % 4;
             elapsedTime += 2;
         }
-    }
-}
-
-let index = 2;
-for (let i = 1; i <= n; i++) {
-    const givenRow = input[index++];
-    for (let j = 1; j <= givenRow.length; j++) {
-        a[i][j] = givenRow[j - 1];
     }
 }
 
