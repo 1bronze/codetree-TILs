@@ -91,7 +91,7 @@ for (let i = 0; i < n; i++) {
             console.log('None');
         } else {
             console.log(grid[i][j].reverse().join(' '));
-            // grid[i][j].reverse(); // 원상복구
+            grid[i][j].reverse(); // 원상복구
         }
     }
 }
