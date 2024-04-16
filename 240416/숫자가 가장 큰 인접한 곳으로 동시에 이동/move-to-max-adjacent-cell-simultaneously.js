@@ -4,6 +4,7 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 const [n, m, t] = input[0].split(' ').map(Number);
 const grid = input.slice(1, 1 + n).map(line => line.trim().split(' ').map(Number));
 const marbles = Array.from(Array(n), () => Array(n).fill(0));
+const nextMarbles = Array.from(Array(n), () => Array(n).fill(0));
 
 input.slice(1 + n, 1 + n + m).map(line => line.trim().split(' ').map(Number)).forEach(([y, x]) => {
     marbles[y - 1][x - 1] = 1;
@@ -40,16 +41,20 @@ function move(y, x) {
     const nextDir = getMaxDir(y, x);
     const ny = y + dy[nextDir];
     const nx = x + dx[nextDir];
+    // console.log(`(${y}, ${x}) > (${ny},${nx})`)
 
-    marbles[y][x] -= 1;
-    marbles[ny][nx] += 1;
+    nextMarbles[ny][nx] += 1;
+
+    // for (let i = 0; i < marbles.length; i++)
+    //     console.log(marbles[i])
+    // console.log()
 }
 
 function removeDupMarbles() {
     for (let i = 0; i < n; i++)
         for (let j = 0; j < n; j++)
-            if (marbles[i][j] > 1)
-                marbles[i][j] = 0;
+            if (nextMarbles[i][j] > 1)
+                nextMarbles[i][j] = 0;
 }
 
 function getResult() {
@@ -63,6 +68,16 @@ function getResult() {
     return ret;
 }
 
+function copyToOrigin() {
+    for (let i = 0; i < n; i++)
+        for (let j = 0; j < n; j++)
+            marbles[i][j] = nextMarbles[i][j];
+
+    for (let i = 0; i < n; i++)
+        for (let j = 0; j < n; j++)
+            nextMarbles[i][j] = 0;
+}
+
 function solve() {
     for (let i = 0; i < t; i++) {
         for (let y = 0; y < n; y++)
@@ -70,6 +85,7 @@ function solve() {
                 move(y, x);
 
         removeDupMarbles();
+        copyToOrigin();
     }
 
     console.log(getResult());
