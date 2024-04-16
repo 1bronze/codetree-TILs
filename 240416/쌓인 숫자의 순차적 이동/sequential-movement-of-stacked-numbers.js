@@ -1,79 +1,97 @@
-const fs = require('fs');
+const OUT_OF_GRID = [-1, -1];
+
+const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
-const [n, m] = input[0].split(' ').map(Number);
-const grid = input.slice(1, 1 + n).map(line => line.split(' ').map(n => [Number(n)]));
-const movements = input[1 + n].split(' ').map(Number);
+const [n, m] = input.shift().split(' ').map(Number);
+const grid = Array.from(Array(n), () => Array.from(Array(n), () => []));
 
-const dy = [0, -1, -1, -1, 0, 1, 1, 1, 0];
-const dx = [0, -1, 0, 1, 1, 1, 0, -1, -1];
+const getPos = moveNum => {
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            for (const num of grid[i][j]) {
+                if (num === moveNum) {
+                    return [i, j];
+                }
+            }
+        }
+    }
+};
 
-function find(target) {
-    for (let y = 0; y < n; y++)
-        for (let x = 0; x < n; x++)
-            for (let i = 0; i < grid[y][x].length; i++)
-                if (grid[y][x][i] === target)
-                    return [y, x, i];
+const inRange = (x, y) => {
+    return 0 <= x && x < n && 0 <= y && y < n;
+};
 
-    return [-1, -1, -1];
-}
+const nextPos = pos => {
+    const dxs = [-1, -1, -1, 0, 0, 1, 1, 1];
+    const dys = [-1, 0, 1, -1, 1, -1, 0, 1];
 
-function inRange(y, x) {
-    return y >= 0 && y < n && x >= 0 && x < n;
-}
+    const [x, y] = pos;
 
-function getMaxDir(y, x) {
-    let maxVal = 0;
-    let maxDir = 0;
-
-    for (let i = 1; i <= 9; i++) {
-        const ny = y + dy[i];
-        const nx = x + dx[i];
-
-        if (!inRange(ny, nx)) continue;
-
-        let tmp = -1;
-        for (let j = 0; j < grid[ny][nx].length; j++)
-            tmp = Math.max(tmp, grid[ny][nx][j]);
-
-        if (maxVal < tmp) {
-            maxDir = i;
-            maxVal = tmp;
+    let maxVal = -1, maxPos = OUT_OF_GRID;
+    for (let i = 0; i < dxs.length; i++) {
+        const nx = x + dxs[i], ny = y + dys[i];
+        if (inRange(nx, ny)) {
+            for (const num of grid[nx][ny]) {
+                if (num > maxVal) {
+                    maxVal = num;
+                    maxPos = [nx, ny];
+                }
+            }
         }
     }
 
-    return maxDir;
+    return maxPos;
+};
+
+const move = (pos, nextPos, moveNum) => {
+    const [[x, y], [nx, ny]] = [pos, nextPos];
+
+    let toMove = false;
+    for (const num of grid[x][y]) {
+        if (num === moveNum) {
+            toMove = true;
+        }
+
+        if (toMove) {
+            grid[nx][ny].push(num);
+        }
+    }
+
+    while (grid[x][y][grid[x][y].length - 1] !== moveNum) {
+        grid[x][y].pop();
+    }
+    grid[x][y].pop();
+};
+
+const simulate = moveNum => {
+    const pos = getPos(moveNum);
+    const maxPos = nextPos(pos);
+    if (maxPos[0] !== OUT_OF_GRID[0] || maxPos[1] !== OUT_OF_GRID[1]) {
+        move(pos, maxPos, moveNum);
+    }
+};
+
+let lineNumber = 0;
+for (let i = 0; i < n; i++) {
+    const givenRow = input[lineNumber++].split(' ').map(Number);
+    for (let j = 0; j < n; j++) {
+        grid[i][j].push(givenRow[j]);
+    }
 }
 
-function moveArray(fromY, fromX, targetIdx, toY, toX) {
-    grid[toY][toX] = grid[toY][toX].concat(...grid[fromY][fromX].splice(targetIdx));
-}
+const moveNums = input[lineNumber].split(' ').map(Number);
+moveNums.forEach(moveNum => {
+    simulate(moveNum);
+});
 
-function print() {
-    for (let y = 0; y < n; y++) {
-        for (let x = 0; x < n; x++) {
-            if (grid[y][x].length === 0)
-                console.log("None");
-            else
-                console.log(grid[y][x].reverse().join(" "));
+for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+        if (grid[i][j].length === 0) {
+            console.log('None');
+        } else {
+            console.log(grid[i][j].reverse().join(' '));
+            // grid[i][j].reverse(); // 원상복구
         }
     }
 }
-
-function solve() {
-    for (let target of movements) {
-        const [y, x, i] = find(target);
-        const dir = getMaxDir(y, x);
-        // console.log(y, x, i, dir);
-
-        const ny = y + dy[dir];
-        const nx = x + dx[dir];
-
-        // console.log(y, x, i, ny, nx);
-        moveArray(y, x, i, ny, nx);
-    }
-
-    print();
-}
-
-solve();
