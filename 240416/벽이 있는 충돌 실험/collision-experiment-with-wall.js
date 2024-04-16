@@ -83,6 +83,7 @@ function simulate() {
     removeDuplicateMarbles();
 }
 
+let ans = '';
 for (let i = 0; i < t; i++) {
     // 새로운 테스트 케이스가 시작될때마다 기존에 사용하던 값들을 초기화해줍니다.
     marbles = [];
@@ -101,5 +102,7 @@ for (let i = 0; i < t; i++) {
         simulate();
     
     // 출력
-    console.log(marbles.length);
+    ans += marbles.length + '\n';
 }
+
+console.log(ans);
