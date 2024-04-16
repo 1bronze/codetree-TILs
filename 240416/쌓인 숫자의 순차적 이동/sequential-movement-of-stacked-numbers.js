@@ -5,8 +5,8 @@ const [n, m] = input[0].split(' ').map(Number);
 const grid = input.slice(1, 1 + n).map(line => line.split(' ').map(n => [Number(n)]));
 const movements = input[1 + n].split(' ').map(Number);
 
-const dy = [-1, -1, -1, 0, 1, 1, 1, 0];
-const dx = [-1, 0, 1, 1, 1, 0, -1, -1];
+const dy = [0, -1, -1, -1, 0, 1, 1, 1, 0];
+const dx = [0, -1, 0, 1, 1, 1, 0, -1, -1];
 
 function find(target) {
     for (let y = 0; y < n; y++)
@@ -26,14 +26,19 @@ function getMaxDir(y, x) {
     let maxVal = 0;
     let maxDir = 0;
 
-    for (let i = 0; i < 9; i++) {
+    for (let i = 1; i <= 9; i++) {
         const ny = y + dy[i];
         const nx = x + dx[i];
 
         if (!inRange(ny, nx)) continue;
-        if (maxVal < grid[ny][nx]) {
+
+        let tmp = -1;
+        for (let j = 0; j < grid[ny][nx].length; j++)
+            tmp = Math.max(tmp, grid[ny][nx][j]);
+
+        if (maxVal < tmp) {
             maxDir = i;
-            maxVal = grid[ny][nx];
+            maxVal = tmp;
         }
     }
 
