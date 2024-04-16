@@ -4,8 +4,10 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 let idx = 0;
 const t = Number(input[idx++]);
 
+const MAX_N = 50;
 let [n, m] = [0, 0];
 let marbles = [];
+let marbleCnt = Array.from(Array(MAX_N + 1), () => Array(MAX_N + 1).fill(0));
 
 // 입력으로 주어진 방향을 정의한 dx, dy에 맞도록
 // 변환하는데 쓰이는 객체를 정의합니다.
@@ -46,31 +48,32 @@ function move(marble) {
 
 // 구슬을 전부 한 번씩 움직여봅니다.
 function moveAll() {
-    marbles.forEach((marble, i) => {
-        marbles[i] = move(marble);
-    });
+    marbles = marbles.map(marble => move(marble));
 }
 
 // 해당 구슬과 충돌이 일어나는 구슬이 있는지 확인합니다.
-// 자신을 제외한 구슬 중에 위치가 동일한 구슬이 있는지 확인하면 됩니다.
+// 이를 위해 자신의 현재 위치에 놓은 구슬의 개수가
+// 자신을 포함하여 2개 이상인지 확인합니다.
 function duplicateMarbleExist(targetIdx) {
-//   marbles가 비어있는 경우 false 반환
-//   if (marbles.length === 0) return false;
-  
-  const [targetX, targetY, _] = marbles[targetIdx];
-  for (let i = 0; i < marbles.length; i++) {
-    const [x, y, _] = marbles[i];
-    if (i !== targetIdx && x === targetX && y === targetY) {
-      return true;
-    }
-  }
-  return false;
+    const [targetX, targetY] = marbles[targetIdx];
+    return marbleCnt[targetX][targetY] >= 2;
 }
 
 // 충돌이 일어나는 구슬을 전부 지워줍니다.
 function removeDuplicateMarbles() {
-    marbles = marbles.filter((_, i) => !duplicateMarbleExist(i));
+    // Step2-1 : 각 구슬의 위치에 count를 증가 시킵니다.
+    marbles.forEach(([x, y]) => marbleCnt[x][y] += 1);
+
+    // Step2-2 : 충돌이 일어나지 않은 구슬만 전부 기록합니다.
+    const remainingMarbles = marbles.filter((_, i) => !duplicateMarbleExist(i));
+
+    // Step2-3 : 나중을 위해 각 구슬의 위치에 적어놓은 count 수를 다시 초기화합니다.
+    marbles.forEach(([x, y]) => marbleCnt[x][y] -= 1);
+    
+    // Step2-4 : 충돌이 일어나지 않은 구슬들로 다시 채워줍니다.
+    marbles = remainingMarbles;
 }
+
 
 // 조건에 맞춰 시뮬레이션을 진행합니다.
 function simulate() {
@@ -83,7 +86,6 @@ function simulate() {
     removeDuplicateMarbles();
 }
 
-let ans = '';
 for (let i = 0; i < t; i++) {
     // 새로운 테스트 케이스가 시작될때마다 기존에 사용하던 값들을 초기화해줍니다.
     marbles = [];
@@ -102,7 +104,5 @@ for (let i = 0; i < t; i++) {
         simulate();
     
     // 출력
-    ans += marbles.length + '\n';
+    console.log(marbles.length);
 }
-
-console.log(ans);
