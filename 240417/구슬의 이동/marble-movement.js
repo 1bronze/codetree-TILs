@@ -40,8 +40,10 @@ function move(y, x) {
         let dir = marbles[marble].d;
 
         for (let cnt = 0; cnt < v; cnt++) {
-            if (!inRange(ny + dy[dir], nx + dx[dir]))
+            if (!inRange(ny + dy[dir], nx + dx[dir])) {
                 dir = (dir + 2) % 4;
+                marbles[marble].d = dir;
+            }
         
             ny += dy[dir];
             nx += dx[dir];
@@ -65,8 +67,8 @@ function resolveDuplicateMarbles(y, x) {
     let curMarbles = grid[y][x];
 
     curMarbles.sort((m1, m2) => {
-        if (m1.v !== m2.v) return m2.v - m1.v;
-        else return m2.i - m1.i;
+        if (marbles[m1].v !== marbles[m2].v) return marbles[m2].v - marbles[m1].v;
+        else return marbles[m2].i - marbles[m1].i;
     });
 
     if (curMarbles.length > k) 
@@ -81,14 +83,19 @@ function solve() {
                     move(y, x);
     
         copyGrid();
-        for (let i = 0; i < n; i++)
-            for (let j = 0; j < n; j++)
-                console.log(i, j, grid[i][j])
+        // for (let i = 0; i < n; i++)
+        //     for (let j = 0; j < n; j++)
+        //         console.log(i, j, grid[i][j])
+        // console.log()
 
         for (y = 0; y < n; y++)
             for (x = 0; x < n; x++)
                 if (grid[y][x].length >= k)
                     resolveDuplicateMarbles(y, x);
+        // for (let i = 0; i < n; i++)
+        //     for (let j = 0; j < n; j++)
+        //         console.log(i, j, grid[i][j])
+        // console.log()
     }
 
     let ans = 0;
@@ -101,15 +108,3 @@ function solve() {
 }
 
 solve();
-
-/*
-n m t k
-3 7 3 1
-
-L(10) U(5) L(5)
-U(7) X(0) X(0)
-U(1) D(0) D(0)
-
-
-
-*/
