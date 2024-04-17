@@ -38,9 +38,9 @@ function findDuplicateMarble(marble) {
 
     for (let i = 0; i < nextMarbles.length; i++) {
         const [mx, my] = nextMarbles[i];
-        if (targetX === mx && targetY === my) {
+
+        if (targetX === mx && targetY === my)
             return i;
-        }
     }
 
     return -1;
@@ -112,7 +112,7 @@ for (let i = 0; i < t; i++) {
         x = Number(x) * 2;
         y = Number(y) * 2;
         weight = Number(weight);
-        marbles.push([x, y, weight, mapper[d], i]);
+        marbles.push([x, y, weight, mapper[d], j]);
     }
 
     // 처음에 구슬들은 전부
@@ -121,8 +121,8 @@ for (let i = 0; i < t; i++) {
     // 입력으로 주어진 구슬들이 모두 (-2000, -2000) ~ (2000, 2000)
     // 영역 밖으로 벗어나게 되므로 더 이상 충돌이 일어나지 않게 됩니다.
     // 따라서 시뮬레이션을 총 COORD_SIZE번 진행합니다.
-    for (let i = 1; i <= COORD_SIZE + 1; i++) {
-        currTime = i;
+    for (let j = 1; j <= COORD_SIZE + 1; j++) {
+        currTime = j;
         simulate();
     }
 
