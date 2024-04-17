@@ -81,6 +81,9 @@ function solve() {
                     move(y, x);
     
         copyGrid();
+        for (let i = 0; i < n; i++)
+            for (let j = 0; j < n; j++)
+                console.log(i, j, grid[i][j])
 
         for (y = 0; y < n; y++)
             for (x = 0; x < n; x++)
@@ -98,3 +101,15 @@ function solve() {
 }
 
 solve();
+
+/*
+n m t k
+3 7 3 1
+
+L(10) U(5) L(5)
+U(7) X(0) X(0)
+U(1) D(0) D(0)
+
+
+
+*/
