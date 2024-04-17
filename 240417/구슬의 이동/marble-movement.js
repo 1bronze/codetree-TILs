@@ -1,110 +1,106 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
+// 변수 선언 및 입력
 const [n, m, t, k] = input[0].split(' ').map(Number);
-const grid = Array.from(Array(n), () => Array.from(Array(n), () => []));
-let tmpGrid = Array.from(Array(n), () => Array.from(Array(n), () => []));
+let grid = Array.from(Array(n), () => Array.from(Array(n), () => []));
+let nextGrid = Array.from(Array(n), () => Array.from(Array(n), () => []));
 
-const dy = [-1, 0, 1, 0];
-const dx = [0, 1, 0, -1];
-
-const mapper = {
-    'U': 0,
-    'R': 1,
-    'D': 2,
-    'L': 3,
+function inRange(x, y) {
+    return 0 <= x && x < n && 0 <= y && y < n;
 }
 
-const marbles = [];
-input.slice(1, 1 + m).map((line, i) => {
-    const [r, c, d, v] = line.split(' ');
+function nextPos(x, y, vnum, moveDir) {
+    const dx = [-1, 0, 0, 1], dy = [0, 1, -1, 0];
 
-    marbles.push({
-        i: i,
-        d: mapper[d],
-        v: Number(v),
-    });
-    
-    grid[Number(r) - 1][Number(c) - 1].push(i);
+    // vnum 횟수만큼 이동한 이후의 위치를 반환합니다.
+    for (let i = 0; i < vnum; i++) {
+        let nx = x + dx[moveDir], ny = y + dy[moveDir];
+        // 벽에 부딪히면
+        // 방향을 바꾼 뒤 이동합니다.
+        if (!inRange(nx, ny)) {
+            moveDir = 3 - moveDir;
+            nx = x + dx[moveDir];
+            ny = y + dy[moveDir];
+        }
+        x = nx;
+        y = ny;
+    }
+
+    return [x, y, moveDir];
+}
+
+function moveAll() {
+    for (let x = 0; x < n; x++) {
+        for (let y = 0; y < n; y++) {
+            grid[x][y].forEach(([v, num, moveDir]) => {
+                const [nextX, nextY, nextDir] = nextPos(x, y, v, moveDir);
+                nextGrid[nextX][nextY].push([v, num, nextDir]);
+            });
+        }
+    }
+}
+
+function selectMarbles() {
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            if (nextGrid[i][j].length >= k) {
+                // 우선순위가 높은 k개만 남겨줍니다.
+                nextGrid[i][j].sort((a, b) => b[0] - a[0] || b[1] - a[1]);
+                while (nextGrid[i][j].length > k) {
+                    nextGrid[i][j].pop();
+                }
+            }
+        }
+    }
+}
+
+function simulate() {
+    // Step1. nextGrid를 초기화합니다.
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            nextGrid[i][j] = [];
+        }
+    }
+
+    // Step2. 구슬들을 전부 움직입니다.
+    moveAll();
+
+    // Step3. 각 칸마다 구슬이 최대 k개만 있도록 조정합니다.
+    selectMarbles();
+
+    // Step4. nextGrid 값을 grid로 옮겨줍니다.
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            grid[i][j] = nextGrid[i][j];
+        }
+    }
+}
+
+const dirMapper = {
+    "U": 0,
+    "R": 1,
+    "L": 2,
+    "D": 3
+};
+
+input.slice(1, 1 + m).map((line, i) => {
+    let [r, c, d, v] = line.split(' ');
+    [r, c, v] = [r, c, v].map(Number);
+
+    // 살아남는 구슬의 우선순위가 더 빠른 속도, 더 큰 번호 이므로
+    // (속도, 방향, 번호) 순서를 유지합니다.
+    grid[r - 1][c - 1].push([v, i + 1, dirMapper[d]]);
 })
 
-function inRange(y, x) {
-    return y >= 0 && y < n && x >= 0 && x < n;
+// t초에 걸쳐 시뮬레이션을 반복합니다.
+for (let i = 0; i < t; i++) {
+    simulate();
 }
 
-function move(y, x) {
-    for (let marble of grid[y][x]) {
-        const v = marbles[marble].v;
-        let ny = y;
-        let nx = x;
-        let dir = marbles[marble].d;
-
-        for (let cnt = 0; cnt < v; cnt++) {
-            if (!inRange(ny + dy[dir], nx + dx[dir])) {
-                dir = (dir + 2) % 4;
-                marbles[marble].d = dir;
-            }
-        
-            ny += dy[dir];
-            nx += dx[dir];
-        }
-
-        tmpGrid[ny][nx].push(marble);
-    }
-}
-
-function copyGrid() {
-    for (let i = 0; i < n; i++)
-        for (let j = 0; j < n; j++)
-            grid[i][j] = [...tmpGrid[i][j]]
-        
-    for (let i = 0; i < n; i++)
-        for (let j = 0; j < n; j++)
-            tmpGrid[i][j] = [];
-}
-
-function resolveDuplicateMarbles(y, x) {
-    let curMarbles = grid[y][x];
-
-    curMarbles.sort((m1, m2) => {
-        if (marbles[m1].v !== marbles[m2].v) return marbles[m2].v - marbles[m1].v;
-        else return marbles[m2].i - marbles[m1].i;
-    });
-
-    if (curMarbles.length > k) 
-        curMarbles.splice(k);
-}
-
-function solve() {
-    for (let cnt = 0; cnt < t; cnt++) {
-        for (y = 0; y < n; y++)
-            for (x = 0; x < n; x++)
-                if (grid[y][x].length !== 0) 
-                    move(y, x);
-    
-        copyGrid();
-        // for (let i = 0; i < n; i++)
-        //     for (let j = 0; j < n; j++)
-        //         console.log(i, j, grid[i][j])
-        // console.log()
-
-        for (y = 0; y < n; y++)
-            for (x = 0; x < n; x++)
-                if (grid[y][x].length >= k)
-                    resolveDuplicateMarbles(y, x);
-        // for (let i = 0; i < n; i++)
-        //     for (let j = 0; j < n; j++)
-        //         console.log(i, j, grid[i][j])
-        // console.log()
-    }
-
-    let ans = 0;
-    for (y = 0; y < n; y++)
-        for (x = 0; x < n; x++)
-            if (grid[y][x].length !== 0)
-                ans += grid[y][x].length;
-
-    console.log(ans);
-}
-
-solve();
+let ans = 0;
+for (y = 0; y < n; y++)
+    for (x = 0; x < n; x++)
+        if (grid[y][x].length !== 0)
+            ans += grid[y][x].length;
+console.log(ans);
