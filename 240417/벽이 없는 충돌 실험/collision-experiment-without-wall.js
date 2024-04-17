@@ -73,7 +73,7 @@ for (let i = 0; i < t; i++) {
     let curTime = 0;
 
     while (true) {
-        if (curTime >= 2000) break;
+        if (curTime >= 4000) break;
         curTime += 1;
 
         move();
