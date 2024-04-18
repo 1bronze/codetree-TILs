@@ -1,53 +1,49 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
+// 변수 선언 및 입력:
 const n = Number(input[0]);
-const arr = Array.from(Array(10).fill(0));
-
 let ans = 0;
+const seq = [];
 
-function check() {
-    let cnt = 0;
-
-    for (let i = 0; i < n; i++) {
-        if (i === 0) cnt = 1;
-        else if (arr[i] === arr[i - 1]) cnt++;
-        else {
-            if (cnt % arr[i - 1] !== 0)
-                return false;
-            cnt = 1;
-        }
-    }
-
-    // console.log(n, cnt, arr[n - 1], cnt % arr[n - 1]);
-
-    if (n === 1) {
-        if (arr[0] !== 1) {
+function isBeautiful() {
+    // 연달아 같은 숫자가 나오는 시작 위치를 잡습니다.
+    let i = 0;
+    while (i < n) {
+        // 만약 연속하여 해당 숫자만큼 나올 수 없다면
+        // 아름다운 수가 아닙니다.
+        if (i + seq[i] - 1 >= n) {
             return false;
         }
-    }
-    else {
-        if ((cnt % arr[n - 1]) !== 0) {
-            // console.log('called!')
-            return false;   
+        // 연속하여 해당 숫자만큼 같은 숫자가 있는지 확인합니다.
+        // 하나라도 다른 숫자가 있다면
+        // 아름다운 수가 아닙니다.
+        for (let j = i; j < i + seq[i]; j++) {
+            if (seq[j] !== seq[i]) {
+                return false;
+            }
         }
+        
+        i += seq[i];
     }
-
+    
     return true;
 }
 
-function recur(cnt) {
+function countBeautifulSeq(cnt) {
     if (cnt === n) {
-        if (check()) ans++;
-        // console.log(arr.join(' '), ans);
+        if (isBeautiful()) {
+            ans += 1;
+        }
         return;
     }
-
+    
     for (let i = 1; i <= 4; i++) {
-        arr[cnt] = i;
-        recur(cnt + 1);
+        seq.push(i);
+        countBeautifulSeq(cnt + 1);
+        seq.pop();
     }
 }
 
-recur(0);
+countBeautifulSeq(0);
 console.log(ans);
