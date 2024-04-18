@@ -25,9 +25,15 @@ const mapper = {
 // 무게가 동일할 경우 숫자를 내림차순으로 정렬하여
 // 정렬 이후 더 앞선 구슬들이
 // 충돌시에 항상 더 영향력을 가질 수 있도록 합니다.
-function cmp(marble) {
-    const [x, y, weight, moveDir, num] = marble;
-    return (-weight, -num);
+function cmp(a, b) {
+  const [x1, y1, weight1, moveDir1, num1] = a;
+  const [x2, y2, weight2, moveDir2, num2] = b;
+  
+  if (weight1 !== weight2) {
+    return weight2 - weight1;
+  } else {
+    return num2 - num1;
+  }
 }
 
 // 해당 구슬의 k초 후의 위치를 계산하여 반환합니다.
@@ -87,7 +93,7 @@ function collisionOccurTime(marble1, marble2) {
     const [nx1, ny1] = move(marble1, xDist);
     const [nx2, ny2] = move(marble2, xDist);
 
-    if (xDist === yDist && nx1 === nx2 && ny1 && ny2)
+    if (xDist === yDist && nx1 === nx2 && ny1 === ny2)
         return xDist;
     else
         return -1;
@@ -153,7 +159,7 @@ for (let tc = 0; tc < t; tc++) {
     // 충돌시 영향력이 더 높은 구슬이 앞으로 오도록 정렬합니다.
     // 영향력이 더 높다 함은 무게가 더 크거나, 무게가 같더라도 번호가 더 커
     // 충돌시 살아남게 되는 구슬을 의미합니다.
-    marbles.sort((a, b) => cmp(a) - cmp(b));
+    marbles.sort(cmp);
     
     // 모든 구슬쌍에 대해 충돌이 일어나는 경우를 구해
     // 시간순으로 정리해줍니다.
