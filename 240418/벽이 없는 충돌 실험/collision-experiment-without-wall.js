@@ -2,7 +2,8 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
-let t = Number(input.shift());
+let idx = 0;
+let t = Number(input[idx++]);
 let n = 0;
 let marbles = [];
 let collisions = [];
@@ -25,16 +26,17 @@ const mapper = {
 // 정렬 이후 더 앞선 구슬들이
 // 충돌시에 항상 더 영향력을 가질 수 있도록 합니다.
 function cmp(marble) {
-    const [,, weight,, num] = marble;
+    const [x, y, weight, moveDir, num] = marble;
     return (-weight, -num);
 }
 
 // 해당 구슬의 k초 후의 위치를 계산하여 반환합니다.
 function move(marble, k) {
-    const dxs = [0, 1, -1, 0], dys = [1, 0, 0, -1];
+    const dx = [0, 1, -1, 0], dy = [1, 0, 0, -1];
     
-    const [x, y,, moveDir,] = marble;
-    const nx = x + dxs[moveDir] * k, ny = y + dys[moveDir] * k;
+    const [x, y, weight, moveDir, num] = marble;
+    const nx = x + dx[moveDir] * k;
+    const ny = y + dy[moveDir] * k;
     return [nx, ny];
 }
 
@@ -42,8 +44,8 @@ function move(marble, k) {
 // 충돌이 일어난다면 언제 일어나는지 그 시간을 반환합니다.
 // 만약 충돌이 일어나지 않는다면 -1을 반환합니다.
 function collisionOccurTime(marble1, marble2) {
-    const [x1, y1,, dir1,] = marble1;
-    const [x2, y2,, dir2,] = marble2;
+    const [x1, y1, weight1, dir1, num1] = marble1;
+    const [x2, y2, weight2, dir2, num2] = marble2;
 
     // Case1 : 두 구슬의 방향이 같은 경우에는 절대 충돌하지 않습니다.
     if (dir1 === dir2) {
@@ -66,12 +68,13 @@ function collisionOccurTime(marble1, marble2) {
         // dist는 짝수임을 보장할 수 있습니다. 
         const dist = (x1 !== x2 ? Math.abs(x1 - x2) : Math.abs(y1 - y2));
         const half = dist / 2;
-        
-        if (JSON.stringify(move(marble1, half)) === JSON.stringify(move(marble2, half))) {
+
+        const [nx1, ny1] = move(marble1, half);
+        const [nx2, ny2] = move(marble2, half);
+        if (nx1 === nx2 && ny1 === ny2)
             return half;
-        } else {
+        else
             return -1;
-        }
     }
 
     // Case3 : 두 방향이 서로 나란히 있지 않은 경우에는
@@ -81,11 +84,13 @@ function collisionOccurTime(marble1, marble2) {
 
     const xDist = Math.abs(x1 - x2), yDist = Math.abs(y1 - y2);
     
-    if (xDist === yDist && JSON.stringify(move(marble1, xDist)) === JSON.stringify(move(marble2, xDist))) {
+    const [nx1, ny1] = move(marble1, xDist);
+    const [nx2, ny2] = move(marble2, xDist);
+
+    if (xDist === yDist && nx1 === nx2 && ny1 && ny2)
         return xDist;
-    } else {
+    else
         return -1;
-    }
 }
 
 // 모든 구슬쌍에 대해 충돌이 일어나는지 확인하고
@@ -95,12 +100,11 @@ function arrangeCollisions() {
     for (let i = 0; i < n; i++) {
         for (let j = i + 1; j < n; j++) {
             const time = collisionOccurTime(marbles[i], marbles[j]);
-            if (time !== -1) {
+            if (time !== -1)
                 collisions.push([time, i, j]);
-            }
         }
     }
-    // tuple은 기본적으로 앞의 원소부터 오름차순으로 정렬하므로
+
     // 다음과 같이 정렬시 시간순으로 오름차순으로 정렬됨을 보장할 수 있습니다.
     collisions.sort((a, b) => a[0] - b[0]);
 }
@@ -111,9 +115,8 @@ function simulate() {
         // 두 구슬 중 하나라도 이미 이전의 충돌로 인해 소멸되어 버렸다면
         // 두 구슬은 실제로 충돌이 일어날 수 없었다는 의미이므로
         // 패스합니다.
-        if (disappear[index1] || disappear[index2]) {
+        if (disappear[index1] || disappear[index2])
             continue;
-        }
         
         // 처음에 구슬의 목록을 (무게 순, 번호가 더 큰 순)으로
         // 정렬해놨기 때문에 index1 < index2인 경우 
@@ -124,7 +127,6 @@ function simulate() {
     }
 }
 
-let idx = 0;
 for (let tc = 0; tc < t; tc++) {
     // 입력
     n = Number(input[idx++]);
