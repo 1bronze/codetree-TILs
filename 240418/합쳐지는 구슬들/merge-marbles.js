@@ -24,26 +24,8 @@ function inRange(y, x) {
 function resolveCollision(y, x, marble, targetMarble) {
     // 충돌 시 무게는 두 구슬의 합이 된다.
     let newWeight = marble.w + targetMarble.w;
-    let newIndex, newDirection;
-    
-    // 새로운 구슬의 무게가 더 크면
-    if (marble.w > targetMarble.w) {
-        // 새로운 구슬의 방향과 번호를 갖는다.
-        newIndex = marble.i;
-        newDirection = marble.d;
-    } 
-    // 새로운 구슬이 기존 구슬의 무게와 같으면
-    else if (marble.w === targetMarble.w) {
-        // 번호가 더 큰 것의 방향과 번호를 따른다.
-        newIndex = Math.max(marble.i, targetMarble.i);
-        newDirection = (newIndex === marble.i) ? marble.d : targetMarble.d;
-    } 
-    // 기존 구슬의 무게가 더 크면
-    else {
-        // 기존 구슬의 방향과 번호를 갖는다.
-        newIndex = targetMarble.i;
-        newDirection = targetMarble.w;
-    }
+    let newIndex = Math.max(marble.i, targetMarble.i);
+    let newDirection = (newIndex === marble.i) ? marble.d : targetMarble.d;
 
     // 구슬 정보를 업데이트한다.
     marbles[newIndex].w = newWeight;
@@ -64,7 +46,13 @@ function move(y, x, marbleIdx) {
     if (!inRange(ny, nx)) {
         // 방향을 바꾸고 움직이는 것을 마친다.
         marble.d = 3 - marble.d;
-        nextGrid[y][x] = marbleIdx;
+
+        if (nextGrid[y][x] === BLANK) {
+            nextGrid[y][x] = marbleIdx;
+        } else {
+            let targetMarble = marbles[nextGrid[y][x]];
+            resolveCollision(y, x, marble, targetMarble);
+        }
         return;
     }
 
