@@ -112,7 +112,7 @@ function getMaxWeight() {
     for (let i = 0; i < n; i++) {
         for (let j = 0; j < n; j++) {
             if (grid[i][j] !== EMPTY) {
-                const [, weight,] = grid[i][j];
+                const [index, weight, direction] = grid[i][j];
                 maxWeight = Math.max(maxWeight, weight);
             }
         }
