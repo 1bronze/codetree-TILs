@@ -3,6 +3,7 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
 const n = Number(input[0]);
+const grid = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 const bombType = Array.from(Array(n), () => Array(n).fill(0));
 const bombed = Array.from(Array(n), () => Array(n).fill(false));
 
@@ -76,16 +77,10 @@ function findMaxArea(cnt) {
     }
 }
 
-let rowIdx = 1;
-for (let i = 0; i < n; i++) {
-    const givenRow = input[rowIdx++].split(' ').map(Number);
-    for (let j = 0; j < n; j++) {
-        const bombPlace = givenRow[j];
-        if (bombPlace) {
+for (let i = 0; i < n; i++)
+    for (let j = 0; j < n; j++)
+        if (grid[i][j] === 1)
             bombPos.push([i, j]);
-        }
-    }
-}
 
 findMaxArea(0);
 
