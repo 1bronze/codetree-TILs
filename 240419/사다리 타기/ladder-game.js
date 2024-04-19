@@ -10,7 +10,6 @@ const lines = input.slice(1, 1 + m).map(line => {
 let selectedLines = [];
 
 let ans = m;
-console.log(lines)
 
 // 처음 상황과, 선택한 가로줄만 사용했을 때의
 // 상황을 시뮬레이션하여
