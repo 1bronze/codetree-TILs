@@ -6,9 +6,10 @@ const [n, m, c] = input[0].split(' ').map(Number);
 const weight = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 
 // bestVal[sx][sy] : (sx, sy) ~ (sx, sy + m - 1)까지 물건을
-//                    잘 골라 얻을 수 있는 최대 가치를 preprocessing
-//                    때 저장해놓을 배열입니다.
-const bestVal = Array.from(Array(n), () => Array(n).fill(0));
+//                    잘 골라 얻을 수 있는 최대 가치를
+//                    이미 계산한 적이 있다면 그 값을 적어놓고
+//                    아직 계산해본 적이 없다면 -1이 들어있습니다.
+const bestVal = Array.from(Array(n), () => Array(n).fill(-1));
 
 let a = [];
 let maxVal = 0;
@@ -34,15 +35,25 @@ function findMaxSum(currIdx, currWeight, currVal) {
 // (sx, sy) ~ (sx, sy + m - 1) 까지의 숫자들 중 적절하게 골라
 // 무게의 합이 c를 넘지 않게 하면서 얻을 수 있는 최대 가치를 반환합니다.
 function findMax(sx, sy) {
-    // 문제를 a[0] ~ a[m - 1]까지 m개의 숫자가 주어졌을 때
+    // 이미 (sx, sy) ~ (sx, sy + m - 1) 사이의 최적 조합을
+    // 계산해본 적이 있다는 뜻이므로, 그 값을 바로 반환합니다.
+    if (bestVal[sx][sy] !== -1) {
+        return bestVal[sx][sy];
+    }
+    
+    //  문제를 a[0] ~ a[m - 1]까지 m개의 숫자가 주어졌을 때
     // 적절하게 골라 무게의 합이 c를 넘지 않게 하면서 얻을 수 있는 최대 가치를
     // 구하는 문제로 바꾸기 위해
     // a 배열을 적절하게 채워넣습니다.
     a = weight[sx].slice(sy, sy + m);
-    
+
     // 2^m개의 조합에 대해 최적의 값을 구합니다.
     maxVal = 0;
     findMaxSum(0, 0, 0);
+    
+    // 나중에 또 (sx, sy) ~ (sx, sy + m - 1) 사이의 조합을
+    // 계산하려는 시도가 있을 수 있으므로 best_val 배열에 caching 해놓습니다.
+    bestVal[sx][sy] = maxVal;
     return maxVal;
 }
 
@@ -77,18 +88,8 @@ function possible(sx1, sy1, sx2, sy2) {
     return true;
 }
 
-// preprocessing 과정입니다.
-// 미리 각각의 위치에 대해 최적의 가치를 구해 bestVal 배열에 저장해놓습니다.
-for (let sx = 0; sx < n; sx++) {
-    for (let sy = 0; sy < n; sy++) {
-        if (sy + m - 1 < n) {
-            bestVal[sx][sy] = findMax(sx, sy);
-        }
-    }
-}
-
 // 첫 번째 도둑은 (sx1, sy1) ~ (sx1, sy1 + m - 1) 까지 물건을 훔치려 하고
-// 두 번째 도둑은 (sx2, sy2) ~ (sx2, sy2 + m - 1)까지의 물건을
+// 두 번째 도둑은 (sx2, sy2) ~ (sx2, sy2 + m - 1) 까지의 물건을
 // 훔치려 한다고 했을 때 가능한 모든 위치를 탐색해봅니다.
 let ans = 0;
 for (let sx1 = 0; sx1 < n; sx1++) {
@@ -96,7 +97,7 @@ for (let sx1 = 0; sx1 < n; sx1++) {
     for (let sx2 = 0; sx2 < n; sx2++) {
       for (let sy2 = 0; sy2 < n; sy2++) {
         if (possible(sx1, sy1, sx2, sy2)) {
-          const sum = bestVal[sx1][sy1] + bestVal[sx2][sy2];
+          const sum = findMax(sx1, sy1) + findMax(sx2, sy2);
           ans = Math.max(ans, sum);
         }
       }
