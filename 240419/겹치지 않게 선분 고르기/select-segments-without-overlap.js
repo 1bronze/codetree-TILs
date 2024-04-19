@@ -1,28 +1,50 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
+// 변수 선언 및 입력
 const n = Number(input[0]);
-const lines = [];
+const segments = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 
-for (let i = 1; i <= n; i++) {
-    const [n1, n2] = input[i].split(' ').map(Number);
-    const s = Math.min(n1, n2);
-    const e = Math.max(n1, n2);
+let ans = 0;
+const selectedSegs = [];
 
-    lines.push({s: s, e: e});
+function overlapped(seg1, seg2) {
+    const [ax1, ax2] = seg1;
+    const [bx1, bx2] = seg2;
+
+    // 두 선분이 겹치는지 여부는
+    // 한 점이 다른 선분에 포함되는 경우로 판단 가능합니다.
+    return (ax1 <= bx1 && bx1 <= ax2) || (ax1 <= bx2 && bx2 <= ax2) ||
+           (bx1 <= ax1 && ax1 <= bx2) || (bx1 <= ax2 && ax2 <= bx2);
 }
 
-lines.sort((l1, l2) => {
-    return l1.e - l2.e;
-});
-
-let ans = 1;
-let curr = lines[0];
-for (let i = 1; i < n; i++) {
-    if (lines[i].s > curr.e) {
-        ans++;
-        curr = lines[i];
+function possible() {
+    // 단 한쌍이라도 선분끼리 겹치면 안됩니다
+    for (let i = 0; i < selectedSegs.length; i++) {
+        for (let j = i + 1; j < selectedSegs.length; j++) {
+            if (overlapped(selectedSegs[i], selectedSegs[j])) {
+                return false;
+            }
+        }
     }
+
+    return true;
 }
 
+function findMaxSegments(cnt) {
+    if (cnt === n) {
+        if (possible()) {
+            ans = Math.max(ans, selectedSegs.length);
+        }
+        return;
+    }
+
+    selectedSegs.push(segments[cnt]);
+    findMaxSegments(cnt + 1);
+    selectedSegs.pop();
+
+    findMaxSegments(cnt + 1);
+}
+
+findMaxSegments(0);
 console.log(ans);
