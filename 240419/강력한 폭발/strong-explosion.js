@@ -62,16 +62,16 @@ function recur(cnt) {
         return;
     }
 
-    for (let i = cnt + 1; i < bombs.length; i++) {
-        let ny = bombs[i].y;
-        let nx = bombs[i].x;
+    // for (let i = cnt + 1; i < bombs.length; i++) {
+        let ny = bombs[cnt + 1].y;
+        let nx = bombs[cnt + 1].x;
 
         for (let j = 2; j <= 4; j++) {
             grid[ny][nx] = j;
             recur(cnt + 1);
         }
     }
-}
+// }
 
 init();
 recur(0);
