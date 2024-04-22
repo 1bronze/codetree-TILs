@@ -1,77 +1,85 @@
-const fs = require('fs');
+const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
-const EMPTY = '.';
-const START = 'S';
-const END = 'E';
+const COIN_NUM = 9;
+const INT_MAX = Number.MAX_SAFE_INTEGER;
 
+// 변수 선언 및 입력
 const n = Number(input[0]);
-const grid = input.slice(1, 1 + n).map(line => line.split(''));
-const coins = new Array(10).fill(-1);
-const selectedCoins = [];
+const m = 3;
+const grid = input.slice(1, 1 + n);
 
-let ans = 1000000000;
+let coinPos = [];
+let selectedPos = [];
 
-// Step 1. 초기 값 설정
-const start = {y: -1, x: -1};
-const end = {y: -1, x: -1};
+let startPos = [-1, -1];
+let endPos = [-1, -1];
 
-for (let y = 0; y < n; y++) {
-    for (let x = 0; x < n; x++) {
-        if (grid[y][x] === START) {
-            start.y = y;
-            start.x = x;
-        } else if (grid[y][x] === END) {
-            end.y = y;
-            end.x = x;
-        } else if (grid[y][x] !== EMPTY) {
-            coins[Number(grid[y][x])] = {y: y, x: x};
+let ans = INT_MAX;
+
+function dist(a, b) {
+    const [ax, ay] = a;
+    const [bx, by] = b;
+    return Math.abs(ax - bx) + Math.abs(ay - by);
+}
+
+function calc() {
+    let numMoves = dist(startPos, selectedPos[0]);
+    for (let i = 0; i < m - 1; i++) {
+        numMoves += dist(selectedPos[i], selectedPos[i + 1]);
+    }
+    numMoves += dist(selectedPos[m - 1], endPos);
+    
+    return numMoves;
+}
+
+function findMinMoves(currIdx, cnt) {
+    if (cnt === m) {
+        // 선택된 모든 조합에 대해 이동 횟수를 계산합니다.
+        ans = Math.min(ans, calc());
+        return;
+    }
+    
+    if (currIdx === coinPos.length) {
+        return;
+    }
+    
+    // currIdx index에 있는 동전을 선택하지 않은 경우
+    findMinMoves(currIdx + 1, cnt);
+    
+    // currIdx index에 있는 동전을 선택한 경우
+    selectedPos.push(coinPos[currIdx]);
+    findMinMoves(currIdx + 1, cnt + 1);
+    selectedPos.pop();
+}
+
+for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n; j++) {
+        if (grid[i][j] === 'S') {
+            startPos = [i, j];
+        }
+        if (grid[i][j] === 'E') {
+            endPos = [i, j];
         }
     }
 }
 
-function getDist() {
-    let dist = 0;
-    // console.log(selectedCoins)
-
-    // Start > 1
-    const first = selectedCoins[0];
-    dist += Math.abs(start.y - coins[first].y) + Math.abs(start.x - coins[first].x);
-    // console.log('Start > 1', dist)
-
-    // 1 > 2
-    const second = selectedCoins[1];
-    dist += Math.abs(coins[first].y - coins[second].y) + Math.abs(coins[first].x - coins[second].x);
-    // console.log('Start > 2', dist)
-
-    // 2 > 3
-    const third = selectedCoins[2];
-    dist += Math.abs(coins[second].y - coins[third].y) + Math.abs(coins[second].x - coins[third].x);
-    // console.log('Start > 3', dist)
-
-    // 3 > End
-    dist += Math.abs(coins[third].y - end.y) + Math.abs(coins[third].x - end.x);
-    // console.log('Start > End', dist)
-
-    return dist;
-}
-
-function select(cnt, cur) {
-    if (cnt === 3) {
-        ans = Math.min(ans, getDist());
-        return;
-    }
-
-    for (let i = cur + 1; i <= 9; i++) {
-        if (coins[i] === -1) continue;
-        selectedCoins.push(Number(grid[coins[i].y][coins[i].x]));
-        select(cnt + 1, Number(grid[coins[i].y][coins[i].x]));
-        selectedCoins.pop();
+// 동전을 오름차순으로 각 위치를 집어넣습니다.
+// 이후에 증가하는 순서대로 방문하기 위함입니다.
+for (let num = 1; num <= COIN_NUM; num++) {
+    for (let i = 0; i < n; i++) {
+        for (let j = 0; j < n; j++) {
+            if (grid[i][j] === String(num)) {
+                coinPos.push([i, j]);
+            }
+        }
     }
 }
 
-// Step 2. 백트래킹으로 숫자 3개 선택
-select(0, -1);
+findMinMoves(0, 0);
 
-if (ans === 1000000000) console.log(-1);
-else console.log(ans);
+if (ans === INT_MAX) {
+    ans = -1;
+}
+
+console.log(ans);
