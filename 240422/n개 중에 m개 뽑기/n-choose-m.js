@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require('fs');
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
@@ -7,30 +7,30 @@ const combination = [];
 
 // 방문한 원소들을 출력해줍니다.
 function printCombination() {
-    let answer = '';
-    combination.forEach(elem => {
-        answer += `${elem} `;
-    });
-    console.log(answer.trim());
+    console.log(combination.join(' '));
 }
 
-function findCombination(currNum, cnt) {
-    // n개의 숫자를 모두 탐색했으면 더 이상 탐색하지 않습니다.
-    if (currNum === n + 1) {
-        // 탐색하는 과정에서 m개의 숫자를 뽑은 경우 답을 출력해줍니다.
-        if (cnt === m) {
-            printCombination();
-        }
+// 지금까지 뽑은 개수와 마지막으로 뽑힌 숫자를 추적하여
+// 그 다음에 뽑힐 수 있는 원소의 후보를 정합니다.
+function findCombination(cnt, lastNum) {
+    // m개를 모두 뽑은 경우 답을 출력해줍니다.
+    if (cnt === m) {
+        printCombination();
         return;
     }
 
-    // currNum에 해당하는 숫자를 사용했을 때의 경우를 탐색합니다.
-    combination.push(currNum);
-    findCombination(currNum + 1, cnt + 1);
-    combination.pop();
-
-    // currNum에 해당하는 숫자를 사용하지 않았을 때의 경우를 탐색합니다.
-    findCombination(currNum + 1, cnt);
+    // 뽑을 수 있는 원소의 후보들을 탐색합니다.
+    for (let i = lastNum + 1; i <= n; i++) {
+        combination.push(i);
+        findCombination(cnt + 1, i);
+        combination.pop();
+    }
 }
 
-findCombination(1, 0);
+// 가능한 범위를 순회하며 해당 숫자가 
+// 조합의 첫번째 숫자일 때를 탐색합니다.
+for (let i = 1; i <= n; i++) {
+    combination.push(i);
+    findCombination(1, i);
+    combination.pop();
+}
