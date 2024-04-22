@@ -28,17 +28,18 @@ function canGo(x, y) {
 function dfs(x, y) {
     const dx = [0, 1], dy = [1, 0];
     
+    // 탐색을 시작하기 전에 해당 위치를 방문했음을 표시해줍니다.
+    visited[x][y] = 1;
+    
     for (let i = 0; i < dx.length; i++) {
         const newX = x + dx[i], newY = y + dy[i];
         
         if (canGo(newX, newY)) {
-            visited[newX][newY] = 1;
             dfs(newX, newY);
         }
     }
 }
 
-visited[0][0] = 1;
 dfs(0, 0);
 
 console.log(visited[n - 1][m - 1]);
