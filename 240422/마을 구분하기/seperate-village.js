@@ -29,11 +29,11 @@ function canGo(x, y) {
 
 function dfs(x, y) {
     // 0: 오른쪽, 1: 아래쪽, 2: 왼쪽, 3: 위쪽
-    const dxs = [0, 1, 0, -1], dys = [1, 0, -1, 0];
+    const dx = [0, 1, 0, -1], dy = [1, 0, -1, 0];
     
     // 네 방향에 각각에 대하여 DFS 탐색을 합니다.
     for (let dir = 0; dir < 4; dir++) {
-        const newx = x + dxs[dir], newy = y + dys[dir];
+        const newx = x + dx[dir], newy = y + dy[dir];
         
         if (canGo(newx, newy)) {
             visited[newx][newy] = true;
