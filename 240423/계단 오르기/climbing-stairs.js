@@ -10,12 +10,12 @@ function recur(n) {
     if (dp[n] !== UNUSED)
         return dp[n];
 
-    if (n === 1)
-        return 0;
-    else if (n === 2 || n === 3)
-        return 1;
-
     return (dp[n - 2] + dp[n - 3]) % 10007;
 }
+
+dp[0] = 1;
+dp[1] = 0;
+dp[2] = 1;
+dp[3] = 1;
 
 console.log(recur(n));
