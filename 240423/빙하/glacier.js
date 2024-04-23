@@ -44,128 +44,83 @@ const [n, m] = input[0].split(' ').map(Number);
 const a = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 
 // bfs에 필요한 변수들 입니다.
-let q;
+let q = new Queue();
+let glaciersToMelt = new Queue();
 const visited = Array.from(Array(n), () => Array(m).fill(false));
 
-// 0: 오른쪽, 1: 아래쪽, 2: 왼쪽, 3: 위쪽
 const dx = [0, 1, 0, -1];
 const dy = [1, 0, -1, 0];
 
-// 소요 시간과 가장 마지막으로 녹은 빙하의 수를 저장합니다.
 let elapsedTime = 0;
 let lastMeltCnt = 0;
 
-// 주어진 위치가 격자를 벗어나는지 여부를 반환합니다.
 function inRange(x, y) {
     return 0 <= x && x < n && 0 <= y && y < m;
 }
 
-// 범위를 벗어나지 않으면서 물이여야 하고 방문한적이 없어야 갈 수 있습니다.
 function canGo(x, y) {
     return inRange(x, y) && a[x][y] === WATER && !visited[x][y];
 }
 
-// visited 배열을 초기화합니다.
-function initialize() {
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < m; j++) {
-            visited[i][j] = false;
-        }
-    }
+function isGlacier(x, y) {
+    return inRange(x, y) && a[x][y] === GLACIER && !visited[x][y];
 }
 
-// 빙하에 둘러쌓여 있지 않은 물들을 전부 구해주는 BFS입니다.
-// 문제에서 가장자리는 전부 물로 주어진다 했기 때문에
-// 항상 (0, 0)에서 시작하여 탐색을 진행하면
-// 빙하에 둘러쌓여 있지 않은 물들은 전부 visited 처리가 됩니다.
 function bfs() {
-    // BFS 함수가 여러 번 호출되므로
-    // 사용하기 전에 visited 배열을 초기화 해줍니다.
-    initialize();
-
-    // 항상 (0, 0)에서 시작합니다.
-    q.push([0, 0]);
-    visited[0][0] = true;
-
     while (!q.empty()) {
-        // queue에서 가장 먼저 들어온 원소를 뺍니다.
         const [x, y] = q.pop();
-
-        // queue에서 뺀 원소의 위치를 기준으로 네 방향을 확인합니다.
-        for (let dir = 0; dir < 4; dir++) {
-            const newX = x + dx[dir];
-            const newY = y + dy[dir];
-
-            // 더 갈 수 있는 곳이라면 Queue에 추가합니다.
-            if (canGo(newX, newY)) {
-                q.push([newX, newY]);
-                visited[newX][newY] = true;
+        for (let i = 0; i < 4; i++) {
+            const nx = x + dx[i];
+            const ny = y + dy[i];
+            if (canGo(nx, ny)) {
+                q.push([nx, ny]);
+                visited[nx][ny] = true;
+            } else if (isGlacier(nx, ny)) {
+                glaciersToMelt.push([nx, ny]);
+                visited[nx][ny] = true;
             }
         }
     }
 }
 
-// 현재 위치를 기준으로 인접한 영역에
-// 빙하에 둘러쌓여 있지 않은 물이 있는지를 판단합니다.  
-function outsideWaterExistInNeighbor(x, y) {
-    for (let dir = 0; dir < 4; dir++) {
-        const newX = x + dx[dir];
-        const newY = y + dy[dir];
-        if (inRange(newX, newY) && visited[newX][newY]) {
-            return true;
-        }
-    }
-    return false;
-}
-
-// 인접한 영역에 빙하에 둘러쌓여 있지 않은 물이 있는 빙하를 찾아 녹여줍니다.
 function melt() {
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < m; j++) {
-            if (a[i][j] === GLACIER && outsideWaterExistInNeighbor(i, j)) {
-                a[i][j] = WATER;
-                lastMeltCnt++;
-            }
-        }
+    while (!glaciersToMelt.empty()) {
+        const [x, y] = glaciersToMelt.pop();
+        a[x][y] = WATER;
     }
 }
 
-// 빙하를 한 번 녹입니다.
 function simulate() {
-    elapsedTime++;
-    lastMeltCnt = 0;
-    
-    // 빙하에 둘러쌓여 있지 않은 물의 위치를 전부
-    // visited로 체크합니다.
     bfs();
-    
-    // 인접한 영역에 빙하에 둘러쌓여 있지 않은 물이 있는 빙하를 찾아
-    // 녹여줍니다.
+
+    if (glaciersToMelt.empty()) {
+        return false;
+    }
+
+    elapsedTime++;
+    lastMeltCnt = glaciersToMelt.size();
+
+    // Copying array in JavaScript
+    while (!glaciersToMelt.empty()) {
+        q.push(glaciersToMelt.pop());
+    }
+
     melt();
+
+    return true;
 }
 
-// 빙하가 아직 남아있는지 확인합니다.
-function glacierExist() {
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < m; j++) {
-            if (a[i][j] === GLACIER) {
-                return true;
-            }
-        }
-    }
-    return false;
-}
+q.push([0, 0]);
+visited[0][0] = true;
 
 while (true) {
-    // 반복마다 새로운 큐를 생성합니다.
-    // 그렇지 않을 경우 선형 큐 내부 배열의 크기가 계속 늘어나 메모리 초과가 발생합니다.
-    q = new Queue();
-    simulate();
+    // q = new Queue();
+    // glaciersToMelt = new Queue();
 
-    // 빙하가 존재하는 한 계속 빙하를 녹입니다.
-    if (!glacierExist()) {
+    const isGlacierExist = simulate();
+    if (!isGlacierExist) {
         break;
     }
 }
 
-console.log(elapsedTime, lastMeltCnt);
+console.log(`${elapsedTime} ${lastMeltCnt}`);
