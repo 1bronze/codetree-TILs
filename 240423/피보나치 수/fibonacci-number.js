@@ -1,20 +1,12 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
-const UNUSED = -1;
-
 const n = Number(input[0]);
-const memo = Array(n + 1).fill(UNUSED);
+const dp = Array(n + 1).fill(0);
 
-function fib(n) {
-    if (memo[n] !== UNUSED)
-        return memo[n];
+dp[1] = dp[2] = 1;
 
-    if (n === 1 || n === 2)
-        return 1;
-    
-    memo[n] = fib(n - 1) + fib(n - 2);
-    return memo[n];
-}
+for (let i = 3; i <= n; i++)
+    dp[n] = dp[n - 1] + dp[n - 2];
 
-console.log(fib(n));
+console.log(dp[n]);
