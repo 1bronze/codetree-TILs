@@ -1,37 +1,64 @@
+class Node {
+    constructor(value) {
+        this.value = value;
+        this.next = null;
+        this.prev = null;
+    }
+}
+
 class Queue {
     constructor() {  // 빈 큐 하나를 생성합니다.
-        this.q = [];
-        this.head = -1; // head는 큐의 가장 첫 원소의 위치 바로 앞을 가리킵니다.
-        this.tail = -1; // tail은 큐의 가장 마지막 원소의 위치를 가리킵니다.
+        this.count = 0;
+        this.head = null;
+        this.tail = null;
     }
 
     push(item) {  // 큐의 맨 뒤에 데이터를 추가합니다.
-        this.q.push(item);
-        this.tail++;
+        let x = new Node(item);
+
+        if (this.count === 0) {  // 큐가 비어있다면 head와 tail을 모두 x로 설정합니다.
+            this.head = x;
+            this.tail = x;
+        } else {  // 큐에 기존 값이 있다면 tail을 x로 변경합니다.
+            this.tail.next = x;
+            x.prev = this.tail;
+            this.tail = x;
+        }
+        this.count++;  // 큐의 크기를 1 증가시킵니다.
     }
 
-    empty() {  // 큐가 비어있으면 true를 반환합니다.
-        return (this.head === this.tail);
+    empty() {  // 큐가 비어있으면 True를 반환합니다.
+        return this.count === 0;
     }
 
     size() {  // 큐에 들어있는 데이터 수를 반환합니다.
-        return (this.tail - this.head);
+        return this.count;
     }
 
     pop() {  // 큐의 맨 앞에 있는 데이터를 반환하고 제거합니다.
         if (this.empty()) {
             throw new Error("Queue is empty");
         }
-        return this.q[++this.head];
+        let x = this.head;
+        if (this.count === 1) {
+            this.head = null;
+            this.tail = null;
+        } else {
+            this.head = x.next;
+            this.head.prev = null;
+        }
+        this.count--;
+        return x.value;
     }
 
     front() {  // 큐의 맨 앞에 있는 데이터를 제거하지 않고 반환합니다.
         if (this.empty()) {
             throw new Error("Queue is empty");
         }
-        return this.q[this.head + 1];
+        return this.head.value;
     }
 }
+
 
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
@@ -62,7 +89,7 @@ function inRange(x, y) {
 
 // 범위를 벗어나지 않으면서 물이여야 하고 방문한적이 없어야 갈 수 있습니다.
 function canGo(x, y) {
-    return inRange(x, y) && a[x][y] === 0 && !visited[x][y];
+    return inRange(x, y) && a[x][y] === WATER && !visited[x][y];
 }
 
 // visited 배열을 초기화합니다.
