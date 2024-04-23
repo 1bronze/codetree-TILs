@@ -1,64 +1,37 @@
-class Node {
-    constructor(value) {
-        this.value = value;
-        this.next = null;
-        this.prev = null;
-    }
-}
-
 class Queue {
     constructor() {  // 빈 큐 하나를 생성합니다.
-        this.count = 0;
-        this.head = null;
-        this.tail = null;
+        this.q = [];
+        this.head = -1; // head는 큐의 가장 첫 원소의 위치 바로 앞을 가리킵니다.
+        this.tail = -1; // tail은 큐의 가장 마지막 원소의 위치를 가리킵니다.
     }
 
     push(item) {  // 큐의 맨 뒤에 데이터를 추가합니다.
-        let x = new Node(item);
-
-        if (this.count === 0) {  // 큐가 비어있다면 head와 tail을 모두 x로 설정합니다.
-            this.head = x;
-            this.tail = x;
-        } else {  // 큐에 기존 값이 있다면 tail을 x로 변경합니다.
-            this.tail.next = x;
-            x.prev = this.tail;
-            this.tail = x;
-        }
-        this.count++;  // 큐의 크기를 1 증가시킵니다.
+        this.q.push(item);
+        this.tail++;
     }
 
-    empty() {  // 큐가 비어있으면 True를 반환합니다.
-        return this.count === 0;
+    empty() {  // 큐가 비어있으면 true를 반환합니다.
+        return (this.head === this.tail);
     }
 
     size() {  // 큐에 들어있는 데이터 수를 반환합니다.
-        return this.count;
+        return (this.tail - this.head);
     }
 
     pop() {  // 큐의 맨 앞에 있는 데이터를 반환하고 제거합니다.
         if (this.empty()) {
             throw new Error("Queue is empty");
         }
-        let x = this.head;
-        if (this.count === 1) {
-            this.head = null;
-            this.tail = null;
-        } else {
-            this.head = x.next;
-            this.head.prev = null;
-        }
-        this.count--;
-        return x.value;
+        return this.q[++this.head];
     }
 
     front() {  // 큐의 맨 앞에 있는 데이터를 제거하지 않고 반환합니다.
         if (this.empty()) {
             throw new Error("Queue is empty");
         }
-        return this.head.value;
+        return this.q[this.head + 1];
     }
 }
-
 
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
@@ -71,7 +44,7 @@ const [n, m] = input[0].split(' ').map(Number);
 const a = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 
 // bfs에 필요한 변수들 입니다.
-const q = new Queue();
+let q;
 const visited = Array.from(Array(n), () => Array(m).fill(false));
 
 // 0: 오른쪽, 1: 아래쪽, 2: 왼쪽, 3: 위쪽
@@ -184,6 +157,9 @@ function glacierExist() {
 }
 
 while (true) {
+    // 반복마다 새로운 큐를 생성합니다.
+    // 그렇지 않을 경우 선형 큐 내부 배열의 크기가 계속 늘어나 메모리 초과가 발생합니다.
+    q = new Queue();
     simulate();
 
     // 빙하가 존재하는 한 계속 빙하를 녹입니다.
