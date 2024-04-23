@@ -38,7 +38,7 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력
 const [n, k, m] = input[0].split(' ').map(Number);
-const a = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
+const a = input.slice(1, 1 + n).map(line => line.trim().split(' ').map(Number));
 
 let ans = 0;
 const sPos = [];
@@ -57,16 +57,16 @@ for (let i = 0; i < n; i++) {
     }
 }
 
-input.slice(1 + n).forEach(([r, c]) => {
-    sPos.push([Number(r) - 1, Number(c) - 1]);
-})
+input.slice(1 + n).map(line => line.split(' ').map(Number)).forEach(([r, c]) => {
+    sPos.push([r - 1, c - 1]);
+});
 
 function inRange(x, y) {
     return 0 <= x && x < n && 0 <= y && y < n;
 }
 
 function canGo(x, y) {
-    return inRange(x, y) && !a[x][y] && !visited[x][y];
+    return inRange(x, y) && a[x][y] === 0 && !visited[x][y];
 }
 
 function bfs() {
@@ -117,13 +117,9 @@ function calc() {
     });
 
     let cnt = 0;
-    for (let i = 0; i < n; i++) {
-        for (let j = 0; j < n; j++) {
-            if (visited[i][j]) {
-                cnt++;
-            }
-        }
-    }
+    for (let i = 0; i < n; i++)
+        for (let j = 0; j < n; j++)
+            if (visited[i][j]) cnt++;
 
     return cnt;
 }
