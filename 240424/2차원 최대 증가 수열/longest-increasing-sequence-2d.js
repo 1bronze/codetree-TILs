@@ -13,7 +13,7 @@ for (let x = 1; x < m; x++) {
 
         for (let j = 0; j < x; j++) {
             for (let i = 0; i < y; i++) {
-                if (num[y][x] > num[i][j])
+                if (num[y][x] > num[i][j] && dp[i][j] !== 0)
                     dp[y][x] = Math.max(dp[y][x], dp[i][j] + 1);
             }
         }
