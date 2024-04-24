@@ -5,10 +5,15 @@ const [n, m] = input[0].split(' ').map(Number);
 const num = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 const dp = Array.from(Array(n + 1), () => Array(m + 1).fill(0));
 
-dp[0][0] = 1;
 
-for (let x = 0; x < m; x++) {
-    for (let y = 0; y < n; y++) {
+for (let i = 0; i < n; i++)
+    dp[i][0] = 1;
+
+for (let i = 0; i < m; i++)
+    dp[0][i] = 1;
+
+for (let x = 1; x < m; x++) {
+    for (let y = 1; y < n; y++) {
 
         for (let j = 0; j < x; j++) {
             for (let i = 0; i < y; i++) {
@@ -19,4 +24,9 @@ for (let x = 0; x < m; x++) {
     }
 }
 
-console.log(dp[n - 1][m - 1]);
+let ans = 0;
+for (let x = 0; x < m; x++)
+    for (let y = 0; y < n; y++)
+        ans = Math.max(ans, dp[y][x]);
+
+console.log(ans);
