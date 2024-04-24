@@ -1,42 +1,35 @@
 const fs = require("fs");
-const input = fs.readFileSync(0).toString().trim().split('\n');
+const input = fs.readFileSync(0).toString().trim().split("\n");
 
 const n = Number(input[0]);
-const grid = input.slice(1).map(line => line.split(' ').map(Number));
+const num = input.slice(1).map(line => line.split(' ').map(Number));
 
-const UNUSED = -1;
-const memo = Array.from({ length: n }, () => Array(n).fill(UNUSED));
+const dp = Array.from(Array(n), () => Array(n).fill(0));
 
-function inRange(x, y) {
-    return 0 <= x && x < n && 0 <= y && y < n;
+function initialize() {
+    // 시작점의 경우 dp[0][0] = num[0][0]으로 초기값을 설정해줍니다
+    dp[0][0] = num[0][0];
+    
+    // 최좌측 열의 초기값을 설정해줍니다.
+    for (let i = 1; i < n; i++) {
+        dp[i][0] = dp[i - 1][0] + num[i][0];
+    }
+    
+    // 최상단 행의 초기값을 설정해줍니다.
+    for (let j = 1; j < n; j++) {
+        dp[0][j] = dp[0][j - 1] + num[0][j];
+    }
 }
 
-function findMaxSum(x, y) {
-    // 미리 계산된 적이 있는 경우 해당 값을 사용해줍니다.
-    if (memo[x][y] !== UNUSED) {
-        return memo[x][y];
-    }
-    
-    // 도착 지점에 도착하면 최대 합을 갱신해줍니다.
-    if (x === n - 1 && y === n - 1) {
-        return grid[n - 1][n - 1];
-    }
+// 초기값 설정
+initialize();
 
-    const dx = [1, 0], dy = [0, 1];
-    
-    // 가능한 모든 방향에 대해 탐색해줍니다.
-    let maxSum = 0;
-    for (let i = 0; i < dx.length; i++) {
-        const newX = x + dx[i], newY = y + dy[i];
-        
-        if (inRange(newX, newY)) {
-            maxSum = Math.max(maxSum, findMaxSum(newX, newY) + grid[x][y]);
-        }
+// 탐색하는 위치의 위에 값과 좌측 값 중에 큰 값에
+// 해당 위치의 숫자를 더해줍니다. 
+for (let i = 1; i < n; i++) {
+    for (let j = 1; j < n; j++) {
+        dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]) + num[i][j];
     }
-    
-    // 계산된 값을 memo 배열에 저장해줍니다.
-    memo[x][y] = maxSum;
-    return maxSum;
 }
 
-console.log(findMaxSum(0, 0));
+console.log(dp[n - 1][n - 1]);
