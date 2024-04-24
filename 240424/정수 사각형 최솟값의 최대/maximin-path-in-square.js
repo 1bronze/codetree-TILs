@@ -1,11 +1,11 @@
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
-const n = Number(input[0]);
-
 const UNUSED = -1;
 
-const grid = input.map(line => line.split(' ').map(Number));
+const n = Number(input[0]);
+
+const grid = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 const memo = Array.from(Array(n), () => Array(n).fill(UNUSED));
 
 function inRange(x, y) {
@@ -29,11 +29,11 @@ function findMaximin(x, y) {
     // 가능한 방향에 대해 탐색해줍니다.
     let maximin = 0;
     for (let i = 0; i < dx.length; i++) {
-        const new_x = x + dx[i], new_y = y + dy[i];
+        const newX = x + dx[i], newY = y + dy[i];
         
-        if (inRange(new_x, new_y)) {
+        if (inRange(newX, newY)) {
             maximin = Math.max(maximin,
-                Math.min(findMaximin(new_x, new_y), grid[x][y]));
+                Math.min(findMaximin(newX, newY), grid[x][y]));
         }
     }
     
