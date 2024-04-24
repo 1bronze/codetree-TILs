@@ -3,7 +3,7 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 변수 선언 및 입력:
 const n = Number(input[0]);
-const num = input.map(line => line.split(' ').map(Number));
+const num = input.slice(1, 1 + n).map(line => line.split(' ').map(Number));
 const dp = Array.from(Array(n), () => Array(n).fill(0));
 
 function initialize() {
