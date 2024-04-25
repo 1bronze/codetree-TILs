@@ -1,48 +1,95 @@
+class Queue {
+    constructor() {  // 빈 큐 하나를 생성합니다.
+        this.q = [];
+        this.head = -1; // head는 큐의 가장 첫 원소의 위치 바로 앞을 가리킵니다.
+        this.tail = -1; // tail은 큐의 가장 마지막 원소의 위치를 가리킵니다.
+    }
+
+    push(item) {  // 큐의 맨 뒤에 데이터를 추가합니다.
+        this.q.push(item);
+        this.tail++;
+    }
+
+    empty() {  // 큐가 비어있으면 true를 반환합니다.
+        return (this.head === this.tail);
+    }
+
+    size() {  // 큐에 들어있는 데이터 수를 반환합니다.
+        return (this.tail - this.head);
+    }
+
+    pop() {  // 큐의 맨 앞에 있는 데이터를 반환하고 제거합니다.
+        if (this.empty()) {
+            throw new Error("Queue is empty");
+        }
+        return this.q[++this.head];
+    }
+
+    front() {  // 큐의 맨 앞에 있는 데이터를 제거하지 않고 반환합니다.
+        if (this.empty()) {
+            throw new Error("Queue is empty");
+        }
+        return this.q[this.head + 1];
+    }
+}
+
 const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
 
 const [n, m] = input[0].split(' ').map(Number);
 const coin = [0].concat(input[1].split(' ').map(Number));
 
-const MAX_ANS = 10001;
+// bfs에 필요한 변수들 입니다.
+let q = new Queue();
+let visited = Array(m + 1).fill(false);
 
-// dp[i] : 지금까지 선택한 동전의 합이 i일 때, 가능한 최소 동전 개수
-// 최소를 구하는 문제이므로, 초기에는 전부 MAX_ANS을 넣어줍니다.
-let dp = Array(m + 1).fill(MAX_ANS);
+// step[i] : 정점 0에서 시작하여 정점 i 지점에 도달하기 위한  
+// 최단거리를 기록합니다.
+let step = Array(m + 1).fill(0);
+let ans = 0;
 
-// 초기 조건으로 아직 아무런 동전도 고르지 않은 상태를 정의합니다.
-// 따라서 지금까지 선택한 동전의 합이 0이며
-// 지금까지 사용한 동전의 수는 0개이므로,
-// dp[0] = 0을 초기 조건으로 설정합니다.
-dp[0] = 0;
+// m 이내의 숫자만 이용해도 올바른 답을 구할 수 있으므로 
+// 그 범위 안에 들어오는 숫자인지를 확인합니다.
+function inRange(num) {
+    return num <= m;
+}
 
-// 지금까지 선택한 동전의 합이 i이기 위해 
-// 필요한 최소 동전 개수를 계산합니다.
-for (let i = 1; i <= m; i++) {
-    // 합 i를 만들기 위해 마지막으로 사용한 동전이 j번째 동전이었을 경우를
-    // 전부 고려해봅니다. 마지막으로 사용한 동전이 j번째 동전이었을 경우
-    // 최종 합이 i가 되기 위해서는 이전 합이 i - coin[j] 였어야 하므로
-    // 해당 상태를 만들기 위해 필요한 최소 동전의 수인 
-    // dp[i - coin[j]]에 동전을 새로 1개 추가했으므로
-    // 1을 더한 값들 중 최솟값을 선택하면 됩니다.
-    // 단, 합 i가 coin[j]보다 작은 경우에는 j번째
-    // 동전을 써서 합 i를 절대 만들 수 없으므로
-    // i >= coin[j] 조건을 만족하는 경우에 대해서만 고려합니다.
-    for (let j = 1; j <= n; j++) {
-        if (i >= coin[j]) {
-            dp[i] = Math.min(dp[i], dp[i - coin[j]] + 1);
+// m 이내의 숫자이면서 아직 방문한 적이 없다면 가야만 합니다. 
+function canGo(num) {
+    return inRange(num) && !visited[num];
+}
+
+// queue에 새로운 위치를 추가하고
+// 방문 여부를 표시해줍니다.
+// 시작점으로부터의 최단거리 값도 갱신해줍니다.
+function push(num, newStep) {
+    q.push(num);
+    visited[num] = true;
+    step[num] = newStep;
+}
+
+// BFS를 통해 최소 연산 횟수를 구합니다.
+function findMin() {
+    // queue에 남은 것이 없을때까지 반복합니다.
+    while (!q.empty()) {
+        // queue에서 가장 먼저 들어온 원소를 뺍니다.
+        let currNum = q.pop();
+        
+        // queue에서 뺀 원소의 위치를 기준으로 n개의 동전들을 사용해봅니다.
+        for (let i = 1; i <= n; i++) {
+            // 아직 방문한 적이 없으면서 갈 수 있는 곳이라면 새로 queue에 넣어줍니다.
+            if (canGo(currNum + coin[i])) {
+                // 최단 거리는 이전 최단거리에 1이 증가하게 됩니다. 
+                push(currNum + coin[i], step[currNum] + 1);
+            }
         }
     }
+    // m번 정점까지 가는 데 필요한 최소 연산 횟수를 답으로 기록합니다.
+    // 만약 m번 정점으로 갈 수 없다면, -1을 기록합니다
+    ans = visited[m] ? step[m] : -1;
 }
-
-// 합을 정확히 m을 만들었을 때
-// 필요한 최소 동전의 수를 구해야 하므로
-// dp[m]이 답이 됩니다.
-let minCnt = dp[m];
-
-// 거슬러주는 것이 불가능할 시, -1을 출력합니다.
-if (minCnt === MAX_ANS) {
-    minCnt = -1;
-}
-
-console.log(minCnt);
+        
+// BFS를 통해 최소 연산 횟수를 구합니다.
+push(0, 0);
+findMin();
+console.log(ans);
