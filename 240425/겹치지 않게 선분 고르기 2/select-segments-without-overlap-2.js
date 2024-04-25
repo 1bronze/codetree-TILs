@@ -19,8 +19,17 @@ for (let i = 0; i < n; i++) {
     // 초기 셋팅은 1입니다.
     dp[i] = 1;
 
-    for (let j = 0; j < i; j++) {
-        if (segments[i][0] > segments[j][1])
+    // i번째 선분 선택 전에
+    // 바로 선택한 선분을 j라 했을 때 
+    // i, j 선분이 서로 겹치지 않는 경우 중 
+    // 선택 할 수 있는 선분의 최대 개수를 계산합니다.
+    for(let j = 0; j < i; j++) {
+        const x1I = segments[i][0];
+        const x2J = segments[j][1];
+
+        // 이미 x1 순으로 정렬이 되어있기에
+        // x2[j] < x1[i]이기만 하면 두 선분은 겹치지 않습니다.
+        if(x2J < x1I)
             dp[i] = Math.max(dp[i], dp[j] + 1);
     }
 }
