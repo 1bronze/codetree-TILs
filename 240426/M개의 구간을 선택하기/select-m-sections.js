@@ -1,94 +1,88 @@
-const NUM_STATE = 2;
-const MIN_ANS = -500000;
-
-const NOT_BELONG = 0;
-const BELONG = 1;
-
-const fs = require('fs');
+const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split('\n');
+
+const MIN_ANS = -500000;
 
 // 변수 선언 및 입력
 const [n, m] = input[0].split(' ').map(Number);
-let a = [0].concat(input[1].split(' ').map(Number));
+const a = [0].concat(input[1].split(' ').map(Number));
 
-// dp[i][j][k] : i번째 위치까지 잘 고려하여,
-//               총 j개의 구간을 선택했고
-//               i번째가 마지막 구간에 속하지 않았다면 k = NOT_BELONG
-//               i번째가 마지막 구간에 속했다면 k = BELONG 상태라 했을 때
-//               얻을 수 있는 합의 최대
-let dp = Array.from(
-    Array(n + 1), 
-    () => Array.from(Array(m + 1), 
-    () => new Array(NUM_STATE + 1).fill(0))
-);
+// dp[i][j] : 정확히 i번째 위치를 마지막으로,
+//            j개의 구간을 선택했을 때,
+//            얻을 수 있는 합의 최대
+const dp = Array.from(Array(n + 1), () => Array(m + 1).fill(0));
+
+// prefixSum[i] : 1번째부터 i번째까지 
+//                 a배열 원소의 합을 저장하고 있습니다.
+const prefixSum = Array(n + 1).fill(0);
+
+// 누적합 배열에 적절한 값을 채워줍니다.
+function preprocess() {
+    prefixSum[1] = a[1];
+    
+    for (let i = 2; i <= n; i++) {
+        prefixSum[i] = prefixSum[i - 1] + a[i];
+    }
+}
+
+// 배열 a의 startIdx번째 원소부터 endIdx번째 원소까지의 합을 반환합니다.
+function sumInRange(startIdx, endIdx) {
+    return prefixSum[endIdx] - prefixSum[startIdx - 1];
+}
+
 
 function initialize() {
     // 최댓값을 구하는 문제이므로, 
-    // 초기에는 전부
-    // 답이 될 수 있는 최솟값인 MIN_ANS 넣어줍니다.
-    for (let i = 0; i <= n; i++) {
-        for (let j = 0; j <= m; j++) {
-            dp[i][j][NOT_BELONG] = dp[i][j][BELONG] = MIN_ANS;
+    // 초기에는 전부 
+    // 답이 될 수 있는 최솟값인 MIN_ANS를 넣어줍니다.
+    for (let i = 1; i <= n; i++) {
+        for (let j = 1; j <= m; j++) {
+            dp[i][j] = MIN_ANS;
         }
     }
     
-    // 선택한 구간의 수가 0개일 때를
+    // 첫 번째 구간을 선택하는 것을
     // 초기 조건으로 설정합니다.
-    // 0에서 n 사이의 모든 위치 i에 대해
-    // 선택한 구간의 수가 0개이고
-    // 해당 원소는 구간에 사용하지 않았으며
-    // 선택한 구간이 없으므로 초기 합은 0이기 때문에
-    // dp[i][0][NOT_BELONG] = 0이 됩니다.
-    for (let i = 0; i <= n; i++) {
-        dp[i][0][NOT_BELONG] = 0;
+    // 첫 번째 구간을 [l, i] 로 설정한다면, 
+    // 정확히 i번째 위치를 마지막으로 
+    // 1개의 구간을 선택하게 되고
+    // 그때까지의 합은 Sum(l, i)가 되므로 
+    // dp[i][1]값은 1 <= l <= i를 만족하는 l에 대해
+    // Sum(l, i) 값들 중 최댓값이 되어야 합니다.
+    for (let i = 1; i <= n; i++) {
+        for (let l = 1; l <= i; l++) {
+            dp[i][1] = Math.max(dp[i][1], sumInRange(l, i));
+        }
     }
 }
+
+preprocess();
 
 initialize();
 
-// i번째 위치까지 잘 고려하여,
-// 총 j개의 구간을 선택했을 때,
+// 정확히 i번째 위치를 마지막으로, 
+// j개의 구간을 선택했을 때, 
 // 얻을 수 있는 최대 합을 계산합니다.
-
 for (let i = 1; i <= n; i++) {
-    for (let j = 1; j <= m; j++) {
-        // i번째 숫자를 구간에 포함 시켰는지, 안 시켰는지에 대하여
-        // 각각 점화식을 세워줍니다.
-
-        // Case 1
-        // i번째 숫자를 구간에 포함시킨 경우입니다. (BELONG)
-        // 이때 또 선택지가 2개로 나뉩니다. 다음 2가지 중
-        // 더 좋은 값을 택하면 됩니다.
-
-        // Case 1 - 1
-        // 만약 i번째 숫자가 새로운 구간의 시작이라면
-        // 이전 구간이랑 인접하지 않아야 하므로 i - 1번째 상태가
-        // NOT_BELONG이어야 하며, 그떄까지 j - 1개의 구간을 
-        // 선택했을 경우에 해당하는 
-        // dp[i - 1][j - 1][NOT_BELONG]에 a[i] 를 더합니다.
-
-        // Case 1 - 2
-        // 만약 i번째 숫자를 이전 j번째 구간에 포함시키려고 한다면
-        // i - 1번째 상태가 BELONG이어야 하며, 그때까지 j개의
-        // 구간을 선택했을 경우에 해당하는
-        // dp[i - 1][j][BELONG]에 a[i]를 더합니다.
-
-        dp[i][j][BELONG] = Math.max(dp[i - 1][j - 1][NOT_BELONG] + a[i], 
-                                        dp[i - 1][j][BELONG] + a[i]);
-
-        // Case 2
-        // i번째 숫자를 구간에 포함시키지 않은 경우입니다. (NOT_BELONG)
-        // 이때는 i - 1번째 원소를 j번째 구간에 포함시켰는지에 대한 여부가
-        // 크게 중요하지 않으므로
-        // dp[i - 1][j][NOT_BELONG]과 dp[i - 1][j][BELONG] 중
-        // 더 좋은 값을 선택하면 됩니다.
-        dp[i][j][NOT_BELONG] = Math.max(dp[i - 1][j][NOT_BELONG], 
-                                            dp[i - 1][j][BELONG]);
+    for (let j = 2; j <= m; j++) {
+        // j번째로 정한 구간이 [l, i]로 설정되는 경우를 고려합니다.
+        for (let l = 1; l <= i; l++) {
+            // j - 1번째로 정한 구간이 정확히 k번째에서 끝난 경우에 대해 
+            // 전부 조사하여 그 중 합이 가장 큰 경우를 계산합니다.
+            // 단, 구간끼리는 인접할 수 없다고 했으므로 
+            // 가능한 k의 범위는 1에서 l - 2 사이입니다.
+            for (let k = 1; k <= l - 2; k++) {
+                dp[i][j] = Math.max(dp[i][j], dp[k][j - 1] + sumInRange(l, i));
+            }
+        }
     }
 }
 
-// n번째 위치까지 고려했을 때
-// 정확히 m개의 구간을 선택해야 하며
-// 마지막 원소가 m번째 구간에 들어갔는지, 들어가지 않았는지 여부는
-// 크게 상관 없으므로 두 경우 중 값이 더 큰 경우를 선택합니다.
-console.log(Math.max(dp[n][m][NOT_BELONG], dp[n][m][BELONG]));
+// 정확히 m개의 구간을 선택해야 하므로
+// i번째 위치를 마지막으로 총 m개의 구간을 고른 경우에 대해
+// 전부 조사하여 그 중 합이 가장 큰 경우를 선택합니다.
+let ans = MIN_ANS;
+for (let i = 1; i <= n; i++)
+    ans = Math.max(ans, dp[i][m]);
+
+console.log(ans);
