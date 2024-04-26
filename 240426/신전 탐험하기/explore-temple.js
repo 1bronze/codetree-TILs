@@ -24,7 +24,7 @@ for (let i = 0; i < n; i++) {
 
 // 최종적으로 가능한 최대 점수를 계산합니다.
 let ans = 0;
-for (let i = 0; i < n; i++)
+for (let i = 1; i < n; i++)
     ans = Math.max(ans, dp[n][i]);
 
 // 계산된 최대 점수를 출력합니다.
