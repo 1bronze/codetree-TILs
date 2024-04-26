@@ -2,12 +2,9 @@ const fs = require("fs");
 const input = fs.readFileSync(0).toString().trim().split("\n");
 
 const [n, m] = input[0].split(" ").map(Number);
-let a = [0].concat(input[1].split(" ").map(Number));
-let b = [0].concat(input[2].split(" ").map(Number));
-
 // 배열을 뒤집습니다.
-a.reverse();
-b.reverse();
+let a = [0].concat(input[1].split(" ").map(Number).reverse());
+let b = [0].concat(input[2].split(" ").map(Number).reverse());
 
 const INF = Number.MAX_SAFE_INTEGER;
 
