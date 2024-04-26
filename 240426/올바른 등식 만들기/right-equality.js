@@ -81,7 +81,4 @@ for (let i = 1; i <= n; i++) {
 // n개의 숫자를 전부 고려했을 때,
 // 최종적으로 합이 m이 되는 가짓수에 해당하는
 // dp 값을 출력합니다.
-// console.log(dp[n][m]);
-
-let aa = 123n;
-console.log(aa);
+console.log(dp[n][m].toString());
