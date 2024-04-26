@@ -11,7 +11,8 @@ int main() {
         cin >> s[i] >> e[i] >> p[i];
 
     dp[0] = 0;
-    dp[1] = p[1];
+    for (int i = 1; i <= n; i++)
+        dp[i] = p[i];
 
     for (int i = 2; i <= n; i++) {
         for (int j = 1; j < i; j++) {
@@ -21,9 +22,8 @@ int main() {
     }
 
     int ans = 0;
-    for (int i = 1; i <= n; i++) {
+    for (int i = 1; i <= n; i++)
         ans = max(ans, dp[i]);
-    }
 
     cout << ans;
     return 0;
