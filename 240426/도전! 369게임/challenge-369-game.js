@@ -4,7 +4,7 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 const MOD = 10**9 + 7;
 
 // 문자열 a와 그 길이 n을 입력받습니다.
-const a = input[0];
+const a = input[0].trim();
 const n = a.length;
 
 // 10의 거듭제곱을 미리 계산합니다.
