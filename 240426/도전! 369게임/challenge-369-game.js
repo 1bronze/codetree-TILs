@@ -25,7 +25,7 @@ for (let i = 0; i < n; i++) {
     const num = Number(a[i]);
     for (let x = 0; x < 10; x++) {
         // 3, 6, 9인 경우 별도로 처리합니다.
-        if ([3, 6, 9].includes(x)) {
+        if (x === 3 || x === 6 || x === 9) {
             ans += (dp[i][0] + dp[i][1] + dp[i][2]) * pt[n - i - 1] % MOD;
             ans %= MOD;
             continue;
@@ -40,7 +40,7 @@ for (let i = 0; i < n; i++) {
     
     // 현재 숫자가 num보다 작은 경우를 처리합니다.
     for (let x = 0; x < num; x++) {
-        if (isSuc || [3, 6, 9].includes(x)) {
+        if (isSuc || x === 3 || x === 6 || x === 9) {
             ans += pt[n - i - 1];
             ans %= MOD;
         } else {
@@ -50,7 +50,7 @@ for (let i = 0; i < n; i++) {
     }
     
     // 현재 숫자가 3, 6, 9인 경우 플래그를 설정합니다.
-    if ([3, 6, 9].includes(num)) {
+    if (num === 3 || num === 6 || num === 9) {
         isSuc = true;
     } else {
         sm += num;
