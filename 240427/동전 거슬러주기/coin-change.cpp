@@ -23,7 +23,7 @@ int main() {
     // for (int i = 0; i <= m; i++)
     //     cout << i << " " << dp[i] << "\n";
 
-    if (dp[m] >= 100000) cout << '-1';
+    if (dp[m] >= 100000) cout << "-1";
     else cout << dp[m];
 
     return 0;
