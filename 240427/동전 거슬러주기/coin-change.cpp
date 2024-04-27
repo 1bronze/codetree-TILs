@@ -17,11 +17,11 @@ int main() {
 
     for (int i = 0; i <= m; i++)
         for (int j = 0; j < n; j++)
-            if (m - coin[j] >= 0)
+            if (i - coin[j] >= 0)
                 dp[i] = min(dp[i], dp[i - coin[j]] + 1);
 
     // for (int i = 0; i <= m; i++)
-    //     cout << dp[i] << " ";
+    //     cout << i << " " << dp[i] << "\n";
 
     if (dp[m] >= 100000) cout << '-1';
     else cout << dp[m];
