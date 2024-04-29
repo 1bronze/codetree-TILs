@@ -12,11 +12,8 @@ const freq = new Map();
 // hashmap에 기록해줍니다.
 arr.forEach(elem => {
 	// 이미 나와있던 숫자라면 1을 더해줍니다.
-	if (freq.has(elem))
-		freq.set(elem, freq.get(elem) + 1);
-	// 처음 나온 숫자라면 1을 직접 적어줘야 합니다.
-	else
-		freq.set(elem, 1);
+    // 처음 나온 숫자라면 1을 넣습니다.
+    freq.set(elem, (freq.get(elem) || 0) + 1);
 });
 
 // m개의 질의에 대해
