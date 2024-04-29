@@ -13,7 +13,7 @@ for (let i = 0; i < n; i++)
 
 for (let i = 0; i < n; i++)
     for (let j = 0; j < n; j++)
-        map2.set(arr[2][i] + arr[3][j], (map1.get(arr[2][i] + arr[3][j]) || 0) + 1);
+        map2.set(arr[2][i] + arr[3][j], (map2.get(arr[2][i] + arr[3][j]) || 0) + 1);
 
 let ans = 0;
 
