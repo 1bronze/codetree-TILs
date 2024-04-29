@@ -11,8 +11,6 @@ const freq = new Map();
 // 각 숫자가 몇 번씩 나왔는지를
 // hashmap에 기록해줍니다.
 arr.forEach(elem => {
-	// 이미 나와있던 숫자라면 1을 더해줍니다.
-    // 처음 나온 숫자라면 1을 넣습니다.
     freq.set(elem, (freq.get(elem) || 0) + 1);
 });
 
@@ -20,12 +18,7 @@ arr.forEach(elem => {
 // 몇 번씩 나왔는지를 출력합니다.
 let ans = '';
 queries.forEach(elem => {
-	// 나온 적이 있는 숫자라면, 빈도수를 출력해줍니다.
-	if (freq.has(elem))
-		ans += `${freq.get(elem)} `;
-	// 처음 나온 숫자라면 0을 출력합니다.
-	else
-		ans += `0 `;
+	ans += `${freq.get(elem) || 0} `;
 });
 
 console.log(ans);
