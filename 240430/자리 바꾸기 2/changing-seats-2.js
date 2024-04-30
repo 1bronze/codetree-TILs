@@ -16,8 +16,8 @@ for (let c = 0; c < 3; c++) {
     exchanges.forEach(([a, b]) => {
         [cur[a], cur[b]] = [cur[b], cur[a]];
 
-        for (let i = 1; i <= n; i++)
-            records[cur[i]].add(i);
+        records[cur[a]].add(a);
+        records[cur[b]].add(b);
     });
 }
 
