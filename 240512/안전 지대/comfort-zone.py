@@ -1,6 +1,6 @@
 import sys
 
-sys.setrecursionlimit(2500)
+sys.setrecursionlimit(10 ** 6)
 n , m = map(int, input().split())
 
 graph = [
