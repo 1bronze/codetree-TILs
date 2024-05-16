@@ -19,7 +19,7 @@ void shiftLeft(int r) {
 void shiftRight(int r){
   int firstElement = arr[r - 1][0];
 
-  for (int i = 1; i < M; i++) { // 여기 i 시작을 0에서 1로 바꿔야 할듯?
+  for (int i = 0; i < M; i++) { // 여기 i 시작을 0에서 1로 바꿔야 할듯?
     arr[r - 1][i - 1] = arr[r - 1][i];
   }
   arr[r - 1][M - 1] = firstElement;
