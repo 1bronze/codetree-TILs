@@ -8,12 +8,9 @@ const points = input.slice(1, 1 + n).map(line => line.split(" ").map(Number));
 const queries = input.slice(1 + n, 1 + n + m).map(line => line.split(" ").map(Number));
 
 // treeset에 점들을 넣어줍니다.
-const s = new SortedSet(points, (a, b) => {
-    if (a[0] === b[0]) {
-        return a[1] - b[1];
-    }
-    return a[0] - b[0];
-});
+const s = new SortedSet();
+
+points.forEach(point => s.push(point));
 
 // 질의마다 조건에 맞는 점을 찾아줍니다.
 queries.forEach(target => {
