@@ -25,7 +25,7 @@ arr.forEach(y => {
     // 그 바로 뒤의 숫자를 z, 바로 앞의 숫자를 x라고 두었습니다.
     const z = sNum.findLeastGreaterThan(y).value;
     const x = sNum.findGreatestLessThan(y).value;
-    console.log(z, x)
+    
     // 구간의 길이는 (x ~ z) 구간이 사라지며,
     // (x ~ y) 구간과 (y ~ z) 구간이 새로 생겨납니다.
     sLen.delete([-(z - x - 1), x, z]);
