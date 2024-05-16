@@ -16,6 +16,7 @@ sNum.push(n + 1);
 // 길이가 긴 구간부터 나오도록 구간의 길이에 -를 붙여서 넣어줍니다.
 sLen.push([-(n + 1), -1, n + 1]);
 
+const result = [];
 arr.forEach(y => {
     // 입력받은 숫자를 treeset에 추가합니다.
     sNum.push(y);
@@ -33,5 +34,7 @@ arr.forEach(y => {
 
     // y가 추가된 후로 구간 중 가장 긴 구간을 찾아 출력합니다.
     const [bestLength, , ] = sLen.findLeast().value;
-    console.log(-bestLength);
+    result.push(-bestLength);
 });
+
+console.log(result.join("\n"));
