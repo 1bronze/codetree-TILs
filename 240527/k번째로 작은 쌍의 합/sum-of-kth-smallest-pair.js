@@ -12,8 +12,8 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 
 // 입력 및 변수 선언:
 const [n, m, k] = input[0].split(" ").map(Number);
-const arr1 = input[1].split(" ").map(Number);
-const arr2 = input[2].split(" ").map(Number);
+const arr1 = input[1].trim().split(" ").map(Number);
+const arr2 = input[2].trim().split(" ").map(Number);
 
 const pq = new Heap(null, null, (a, b) => {
     if(a.pairSum !== b.pairSum)
