@@ -45,7 +45,7 @@ const n = Number(input[1]);
 const commands = input.slice(2, 2 + n).map(line => line.split(" "));
 
 // 맨 처음 존재하는 노드를 만듭니다.
-const cur = new Node(s);
+let cur = new Node(s);
 
 commands.forEach(command => {
     const option = Number(command[0]);
