@@ -12,7 +12,7 @@ class Node {
 
 // i번 연결 리스트가 비어있는지 여부
 function empty(i) {
-    return heads[i] === 0;
+    return heads[i] === null;
 }
 
 // 노드 u와 v를 서로 연결
