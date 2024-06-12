@@ -10,12 +10,12 @@ const arr = new Array(1000001).fill(0);
 const prefixSum = new Array(1000001).fill(0);
 
 function getSum(s, e) {
-    return prefixSum[e] - prefixSum[s - 1];
+    return prefixSum[e] - prefixSum[s] + arr[s];
 }
 
 num.forEach(elem => arr[elem] = 1);
 
-prefixSum[0] = 0;
+prefixSum[0] = arr[0];
 for (let i = 1; i <= 1000000; i++)
     prefixSum[i] = prefixSum[i - 1] + arr[i];
 
