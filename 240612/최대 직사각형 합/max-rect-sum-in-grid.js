@@ -17,11 +17,12 @@ function getSum(x1, y1, x2, y2) {
 }
 
 function getExpandedSum(x, y) {
-    let newSum = getSum(start[x][y][0], y, x, y) + 
-                 getSum(x, start[x][y][1], x, y) - 
+    let newSum = dp[x - 1][y - 1] + 
+                 getSum(start[x - 1][y - 1][0], y, x, y) + 
+                 getSum(x, start[x - 1][y - 1][1], x, y) - 
                  arr[x - 1][y - 1];
     let startX = start[x - 1][y - 1][0];
-    let startY = start[x - 1][y - 1][0];
+    let startY = start[x - 1][y - 1][1];
     return [newSum, startX, startY];
 }
 
@@ -52,16 +53,6 @@ function getNewSum(x, y) {
     return [newSum, startX, startY];
 }
 
-// init dp
-for (let i = 1; i <= n; i++)
-    for (let j = 1; j <= n; j++)
-        dp[i][j] = arr[i - 1][j - 1];
-
-// init start
-for (let i = 0; i <= n; i++)
-    for (let j = 0; j <= n; j++)
-        start[i][j] = [i, j];
-
 // init prefixSum
 for (let i = 1; i <= n; i++)
     for (let j = 1; j <= n; j++)
@@ -70,11 +61,21 @@ for (let i = 1; i <= n; i++)
                           prefixSum[i - 1][j - 1] + 
                           arr[i - 1][j - 1];
 
-for (let i = 1; i <= n; i++) {
-    for (let j = 1; j <= n; j++) {
-        let [newSum, startX, startY] = getExpandedSum(i, j);
-        newSum += dp[i - 1][j - 1];
+// init dp
+for (let a = 1; a <= n; a++) {
+    let [newSum, startX, startY] = getNewSum(a, 1);
+    dp[a][1] = newSum;
+    start[a][1] = [startX, startY];
+}
+for (let b = 1; b <= n; b++) {
+    let [newSum, startX, startY] = getNewSum(1, b);
+    dp[1][b] = newSum;
+    start[1][b] = [startX, startY];
+}
 
+for (let i = 2; i <= n; i++) {
+    for (let j = 2; j <= n; j++) {
+        let [newSum, startX, startY] = getExpandedSum(i, j);
         if (dp[i][j] < newSum) {
             dp[i][j] = newSum;
             start[i][j][0] = startX;
@@ -82,7 +83,6 @@ for (let i = 1; i <= n; i++) {
         }
 
         [newSum, startX, startY] = getNewSum(i, j);
-
         if (dp[i][j] < newSum) {
             dp[i][j] = newSum;
             start[i][j][0] = startX;
@@ -96,3 +96,7 @@ for (let i = 1; i <= n; i++)
         ans = Math.max(ans, dp[i][j]);
 
 console.log(ans);
+
+// for (let i = 1; i <= n; i++) {
+//     console.log(dp[i].slice(1,).join(" "));
+// }
