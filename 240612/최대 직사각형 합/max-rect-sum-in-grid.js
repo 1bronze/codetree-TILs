@@ -5,7 +5,7 @@ const input = fs.readFileSync(0).toString().trim().split('\n');
 const n = Number(input[0]);
 const arr = input.slice(1, 1 + n).map(line => line.trim().split(' ').map(Number));
 const prefixSum = Array.from(Array(n + 1), () => Array(n + 1).fill(0));
-const dp = Array.from(Array(n + 1), () => Array(n + 1).fill(0));
+const dp = Array.from(Array(n + 1), () => Array(n + 1).fill(Number.MIN_SAFE_INTEGER));
 const start = Array.from(Array(n + 1), () => Array(n + 1).fill([0, 0]));
 let ans = Number.MIN_SAFE_INTEGER;
 
