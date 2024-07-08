@@ -18,4 +18,4 @@ for i in range(n):
         cnt += 1
 
 # 출력
-print(min_val, cnt)
+print(min_val, cnt, 1)
